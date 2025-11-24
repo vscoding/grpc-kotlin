@@ -13,11 +13,13 @@ import java.net.InetSocketAddress
  *
  * @author tech@intellij.io
  */
-class MonitoringServerTransportFilter(val registryOperator: RegistryOperator) : ServerTransportFilter() {
+class MonitoringServerTransportFilter(
+    val registryOperator: RegistryOperator
+) : ServerTransportFilter() {
     private val log = getLogger(MonitoringServerTransportFilter::class.java)
 
     override fun transportReady(transportAttrs: Attributes): Attributes? {
-        log.info("Transport is ready: {}", transportAttrs)
+        log.info("transport ready: {}", transportAttrs)
         registryOperator.up(
             Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false)
         )
@@ -28,11 +30,11 @@ class MonitoringServerTransportFilter(val registryOperator: RegistryOperator) : 
         registryOperator.down(
             Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false)
         )
-        val remote = transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)
-        if (remote is InetSocketAddress) {
-            log.error("Transport terminated: ip = {} ;port = {}", remote.hostString, remote.port)
+        val client = transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)
+        if (client is InetSocketAddress) {
+            log.error("transport terminated: ip = {} ;port = {}", client.hostString, client.port)
         } else {
-            log.error("Transport is terminated: {}", transportAttrs)
+            log.error("transport terminated: {}", transportAttrs)
         }
         super.transportTerminated(transportAttrs)
     }

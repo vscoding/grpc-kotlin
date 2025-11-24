@@ -86,11 +86,11 @@ interface RegistryOperator {
         private val connLock: Lock = ReentrantLock()
 
         override fun setServerReady() {
-            severConnRegistry.serverReady.compareAndSet(false, true)
+            severConnRegistry.serverReady.set(true)
         }
 
         override fun setServerNotReady() {
-            severConnRegistry.serverReady.compareAndSet(true, false)
+            severConnRegistry.serverReady.set(false)
         }
 
 

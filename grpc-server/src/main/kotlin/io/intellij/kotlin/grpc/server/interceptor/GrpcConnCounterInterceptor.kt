@@ -9,12 +9,12 @@ import io.intellij.kotlin.grpc.server.config.getLogger
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * GrpcConnectionCountInterceptor
+ * GrpcConnCounterInterceptor
  *
  * @author tech@intellij.io
  */
-class GrpcConnectionCountInterceptor : ServerInterceptor {
-    private val log = getLogger(GrpcConnectionCountInterceptor::class.java)
+class GrpcConnCounterInterceptor : ServerInterceptor {
+    private val log = getLogger(GrpcConnCounterInterceptor::class.java)
     private val connectionCount = AtomicInteger(0)
 
     override fun <ReqT, RespT> interceptCall(

@@ -5,7 +5,7 @@ import io.grpc.ClientTransportFilter
 import io.grpc.ManagedChannelBuilder
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder
 import io.intellij.kotlin.grpc.client.config.filter.MonitoringClientTransportFilter
-import io.intellij.kotlin.grpc.client.config.interceptor.GrpcConnectionClientInterceptor
+import io.intellij.kotlin.grpc.client.config.interceptor.GrpcConnClientInterceptor
 import io.intellij.kotlin.grpc.client.context.RegistryOperator
 import net.devh.boot.grpc.client.channelfactory.GrpcChannelConfigurer
 import net.devh.boot.grpc.client.interceptor.GrpcGlobalClientInterceptor
@@ -45,7 +45,7 @@ class GrpcConfig {
 
     @GrpcGlobalClientInterceptor
     fun grpcConnectionClientInterceptor(registryOperator: RegistryOperator): ClientInterceptor {
-        return GrpcConnectionClientInterceptor(registryOperator)
+        return GrpcConnClientInterceptor(registryOperator)
     }
 
     companion object {

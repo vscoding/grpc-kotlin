@@ -10,4 +10,5 @@ spring:
 
 logging:
   level:
+    io.intellij.kotlin.grpc.server.service.HeartBeatService: debug
     io.intellij.kotlin.grpc.server.tasks.print.ClientConnPrintTask: debug

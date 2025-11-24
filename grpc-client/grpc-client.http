@@ -21,3 +21,6 @@ Accept: application/json
 ### stop tasks
 GET http://127.0.0.1:8080/stopTasks
 Accept: application/json
+
+### heatbeat
+GET http://127.0.0.1:8080/heartBeat

@@ -34,9 +34,7 @@ interface HeartBeatService {
             log.debug("HeartBeat Report. Ping. Content={}", content)
             try {
                 val pong: HeartBeatProto.Pong = heartBeatServiceBlockingStub.report(
-                    HeartBeatProto.Ping.newBuilder()
-                        .setId(content)
-                        .build()
+                    HeartBeatProto.Ping.newBuilder().setId(content).build()
                 )
                 log.debug("HeartBeat Down. Pong; Resp={}", pong.getRes())
                 registryOperator.setServerReady()

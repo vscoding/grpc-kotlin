@@ -18,7 +18,7 @@ class MonitoringClientTransportFilter(
     private val log = getLogger(MonitoringClientTransportFilter::class.java)
 
     override fun transportReady(transportAttrs: Attributes): Attributes? {
-        log.debug("transport ready; {}", transportAttrs)
+        log.debug("transport ready: {}", transportAttrs)
         val remote: Address = Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false)
         val local: Address = Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_LOCAL_ADDR)!!, true)
         registryOperator.connect(remote.host, remote.port, local.port)
@@ -26,7 +26,7 @@ class MonitoringClientTransportFilter(
     }
 
     override fun transportTerminated(transportAttrs: Attributes?) {
-        log.debug("transport terminated; {}", transportAttrs)
+        log.debug("transport terminated: {}", transportAttrs)
         registryOperator.disconnect()
     }
 

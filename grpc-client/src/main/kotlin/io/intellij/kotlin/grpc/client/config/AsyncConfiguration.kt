@@ -3,9 +3,9 @@ package io.intellij.kotlin.grpc.client.config
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.task.TaskExecutor
+import org.springframework.core.task.VirtualThreadTaskExecutor
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 
 /**
@@ -13,28 +13,22 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
  *
  * @author tech@intellij.io
  */
-@Configuration
 @EnableScheduling
+@Configuration
 class AsyncConfiguration {
     @Bean
     fun taskExecutor(): TaskExecutor {
-        val executor = ThreadPoolTaskExecutor()
-        executor.corePoolSize = 10
-        executor.maxPoolSize = 10
-        executor.setWaitForTasksToCompleteOnShutdown(true)
-        executor.setThreadNamePrefix("Async-")
-
-        executor.initialize()
-        return executor
+        return VirtualThreadTaskExecutor("v-async-")
     }
 
     @Bean
     fun taskScheduler(): TaskScheduler {
         val scheduler = ThreadPoolTaskScheduler()
-        scheduler.setPoolSize(5)
+        scheduler.setPoolSize(4)
         scheduler.setThreadNamePrefix("Task-")
 
         scheduler.initialize()
         return scheduler
     }
+
 }

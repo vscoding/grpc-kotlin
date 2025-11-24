@@ -6,6 +6,7 @@ import io.intellij.kotlin.grpc.client.context.GrpcApplicationContext
 import io.intellij.kotlin.grpc.client.context.ServerConn
 import io.intellij.kotlin.grpc.client.entities.GreetReq
 import io.intellij.kotlin.grpc.client.entities.GreetResp
+import io.intellij.kotlin.grpc.client.service.HeartBeatService
 import io.intellij.kotlin.grpc.client.service.TestService
 import io.intellij.kotlin.grpc.task.CronTask
 import org.springframework.http.ResponseEntity
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class GrpcClientTestController(
     private val grpcApplicationContext: GrpcApplicationContext,
+    private val heartBeatService: HeartBeatService,
     private val testService: TestService,
     private val tasks: MutableList<CronTask>
 ) {
@@ -79,12 +81,16 @@ class GrpcClientTestController(
         }.toMutableList()
     }
 
-    class TaskStatus(
+    data class TaskStatus(
         val className: String,
         val cron: String,
         val running: Boolean
     )
 
+    @GetMapping("/heartBeat")
+    fun heartBeat() {
+        heartBeatService.doHeartBeat("heartBeat")
+    }
 
     @ControllerAdvice
     class GlobalExceptionHandler {

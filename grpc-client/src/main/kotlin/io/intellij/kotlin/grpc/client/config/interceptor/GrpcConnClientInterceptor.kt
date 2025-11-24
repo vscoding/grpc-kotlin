@@ -12,14 +12,14 @@ import io.intellij.kotlin.grpc.client.context.RegistryOperator
 import java.util.Objects
 
 /**
- * GrpcConnectionClientInterceptor
+ * GrpcConnClientInterceptor
  *
  * @author tech@intellij.io
  */
-class GrpcConnectionClientInterceptor(
+class GrpcConnClientInterceptor(
     val registryOperator: RegistryOperator
 ) : ClientInterceptor {
-    private val log = getLogger(GrpcConnectionClientInterceptor::class.java)
+    private val log = getLogger(GrpcConnClientInterceptor::class.java)
 
     override fun <ReqT, RespT> interceptCall(
         method: MethodDescriptor<ReqT?, RespT?>?,
