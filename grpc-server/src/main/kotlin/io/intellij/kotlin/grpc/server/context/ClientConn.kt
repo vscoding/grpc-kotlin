@@ -24,6 +24,10 @@ class ClientConn(val connected: Boolean, val remote: Address) {
         return false
     }
 
+    override fun toString(): String {
+        return "ClientConn(connected=$connected, remote=$remote)"
+    }
+
     companion object {
         fun up(address: Address): ClientConn {
             return ClientConn(true, address)

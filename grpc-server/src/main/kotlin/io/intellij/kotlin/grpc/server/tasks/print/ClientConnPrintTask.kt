@@ -30,7 +30,7 @@ class ClientConnPrintTask(
         return Runnable {
             log.debug("List Client's Connections .START")
             grpcServerApplicationContext.liveClients().forEach {
-                log.error("up client = {}", it)
+                log.debug("up client = {}", it)
             }
             log.debug("List Client's Connections .END")
         }

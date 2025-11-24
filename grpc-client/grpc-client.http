@@ -1,6 +1,6 @@
 ### test
 GET http://127.0.0.1:8080/
-Accept: text/plain
+Accept: application/json
 
 ### get serverReady
 GET http://127.0.0.1:8080/serverReady

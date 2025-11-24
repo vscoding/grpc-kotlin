@@ -27,6 +27,10 @@ class Address(val host: String, val port: Int) {
         return Address(host, port)
     }
 
+    override fun toString(): String {
+        return "Address(host='$host', port=$port)"
+    }
+
     companion object {
         private const val UNKNOWN_HOST = "unknown"
         private const val UNKNOWN_PORT = -1

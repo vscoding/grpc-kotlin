@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
@@ -30,16 +31,16 @@ class GrpcClientTestController(
 
     @GetMapping("/")
     @ServerReadyThen
-    fun grpc(): MutableMap<String?, Any?> {
+    fun grpc(): MutableMap<String, Any> {
         val grpc: String = testService.test(grpcApplicationContext.applicationName)
-        return mutableMapOf<String?, Any?>(
-            "grpc" to grpc,
+        return mutableMapOf(
+            "test" to grpc,
             "serverReady" to serverReady(),
             "serverConn" to serverConn()
         )
     }
 
-    @GetMapping("/greet")
+    @PostMapping("/greet")
     fun greet(@RequestBody req: GreetReq): GreetResp {
         return testService.greet(req)
     }
