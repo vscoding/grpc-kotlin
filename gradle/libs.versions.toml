@@ -1,0 +1,36 @@
+[versions]
+freefair-lombok = "8.13.1"
+java = "21"
+kotlin = "2.2.21"
+spring-boot = "3.2.4"
+protoc = "3.24.3"
+grpc = "1.76.0"
+grp-spring-boot-starter = "3.1.0.RELEASE"
+jackson = "3.0.1"
+
+[plugins]
+freefair-lombok = { id = "io.freefair.lombok", version.ref = "freefair-lombok" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+
+google-protobuf = { id = "com.google.protobuf", version = "0.9.5" }
+spring-boot = { id = "org.springframework.boot", version = "3.2.4" }
+spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.6" }
+
+[libraries]
+lombok = { module = "org.projectlombok:lombok", version = "1.18.32" }
+jetbrains-annotations = { module = "org.jetbrains:annotations", version = "24.0.1" }
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version = "1.76.0" }
+grpc-services = { module = "io.grpc:grpc-services", version = "1.76.0" }
+grpc-stub = { module = "io.grpc:grpc-stub", version = "1.76.0" }
+grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded", version = "1.76.0" }
+grpc-spring-boot-starter = { module = "net.devh:grpc-spring-boot-starter", version.ref = "grp-spring-boot-starter" }
+grpc-client-spring-boot-starter = { module = "net.devh:grpc-client-spring-boot-starter", version.ref = "grp-spring-boot-starter" }
+grpc-server-spring-boot-starter = { module = "net.devh:grpc-server-spring-boot-starter", version.ref = "grp-spring-boot-starter" }
+
+jackson-core = { module = "tools.jackson.core:jackson-core", version.ref = "jackson" }
+jackson-databind = { module = "tools.jackson.core:jackson-databind", version.ref = "jackson" }
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version = "2.20" }
+jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+
+spring-boot = { module = "org.springframework.boot:spring-boot", version.ref = "spring-boot" }

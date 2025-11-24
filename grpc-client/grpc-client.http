@@ -1,0 +1,23 @@
+### test
+GET http://127.0.0.1:8080/
+Accept: text/plain
+
+### get serverReady
+GET http://127.0.0.1:8080/serverReady
+Accept: application/json
+
+### get serverConn
+GET http://127.0.0.1:8080/serverConn
+Accept: application/json
+
+### get tasks
+GET http://127.0.0.1:8080/tasks
+Accept: application/json
+
+### stop tasks
+GET http://127.0.0.1:8080/startTasks
+Accept: application/json
+
+### stop tasks
+GET http://127.0.0.1:8080/stopTasks
+Accept: application/json

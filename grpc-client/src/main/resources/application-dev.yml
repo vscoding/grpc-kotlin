@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  web:
+    resources:
+      add-mappings: false
+    #  mvc:
+    #    throw-exception-if-no-handler-found: true
+
+logging:
+  level:
+    io.intellij.kotlin.grpc.client.service.HeartBeatService.DefaultHeartBeatService: debug
+    io.intellij.kotlin.grpc.client.config.filter.MonitoringClientTransportFilter: debug
+    io.intellij.kotlin.grpc.client.config.interceptor.GrpcConnectionClientInterceptor: debug

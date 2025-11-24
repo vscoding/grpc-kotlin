@@ -1,0 +1,10 @@
+grpc:
+  server:
+    enable-keep-alive: true
+    port: 9090
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: grpc-server

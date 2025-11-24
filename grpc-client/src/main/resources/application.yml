@@ -1,0 +1,14 @@
+grpc:
+  client:
+    grpc-server:
+      address: static://127.0.0.1:9090
+      negotiation-type: plaintext
+      keep-alive-time: 60s # 指定间隔发送心跳,单位秒
+      keep-alive-timeout: 20s # 指定心跳超时时间,单位秒
+      keep-alive-without-calls: true # 没有RPC调用时是否也发送心跳
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: grpc-client

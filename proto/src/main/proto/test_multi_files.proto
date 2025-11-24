@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+
+option java_package = "io.intellij.kotlin.grpc.multi";
+
+enum Gender{
+  MAN = 0;
+  WOMEN = 1;
+}
+
+message GreetRequest{
+  int32 id = 1;
+  string name = 2;
+  Gender gender = 3;
+  repeated string emails = 4;
+}
+
+message GreetResponse{
+  string msg = 1;
+}
+
+service MultiService {
+  rpc sayHello(GreetRequest) returns(GreetResponse);
+}
