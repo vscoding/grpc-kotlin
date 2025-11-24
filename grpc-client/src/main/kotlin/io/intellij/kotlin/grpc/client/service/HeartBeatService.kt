@@ -37,7 +37,7 @@ interface HeartBeatService {
                     HeartBeatProto.Ping.newBuilder().setId(content).build()
                 )
                 log.debug("HeartBeat Down. Pong; Resp={}", pong.getRes())
-                registryOperator.setServerReady()
+                registryOperator.markServerReady()
             } catch (_: Exception) {
                 // {@link io.intellij.kotlin.grpc.client.config.interceptor.GrpcConnectionClientInterceptor} cancel
                 // sharedOperator.setServerNotReady();

@@ -2,7 +2,7 @@
 freefair-lombok = "8.13.1"
 java = "21"
 kotlin = "2.2.21"
-spring-boot = "3.2.4"
+spring-boot = "3.2.10"
 protoc = "3.24.3"
 grpc = "1.76.0"
 grp-spring-boot-starter = "3.1.0.RELEASE"
@@ -14,7 +14,7 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 
 google-protobuf = { id = "com.google.protobuf", version = "0.9.5" }
-spring-boot = { id = "org.springframework.boot", version = "3.2.4" }
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.6" }
 
 [libraries]

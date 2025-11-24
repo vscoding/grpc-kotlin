@@ -2,7 +2,7 @@ package io.intellij.kotlin.grpc.client.config.aop
 
 import io.intellij.kotlin.grpc.client.config.getLogger
 import io.intellij.kotlin.grpc.client.context.GrpcApplicationContext
-import io.intellij.kotlin.grpc.client.expection.ServerNotReadyException
+import io.intellij.kotlin.grpc.client.expection.GrpcServerNotReadyException
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component
  */
 @Component
 @Aspect
-class ServerReadyAdvice(
+class RequireGrpcServerReadyAspect(
     private val grpcApplicationContext: GrpcApplicationContext
 ) {
-    private val log = getLogger(ServerReadyAdvice::class.java)
+    private val log = getLogger(RequireGrpcServerReadyAspect::class.java)
 
     @Pointcut("execution(* io.intellij.kotlin.grpc.client..*.*(..)) && @annotation(io.intellij.kotlin.grpc.client.config.anno.RequireGrpcServerReady)")
     fun pointCut() {
@@ -36,7 +36,7 @@ class ServerReadyAdvice(
                 joinPoint.target.javaClass.simpleName,
                 joinPoint.signature.name
             )
-            throw ServerNotReadyException.create()
+            throw GrpcServerNotReadyException.create()
         }
     }
 }

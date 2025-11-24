@@ -5,11 +5,11 @@ package io.intellij.kotlin.grpc.client.expection
  *
  * @author tech@intellij.io
  */
-class ServerNotReadyException private constructor() : RuntimeException(MSG) {
+class GrpcServerNotReadyException private constructor() : RuntimeException(MSG) {
     companion object {
         private const val MSG = "Grpc Server Not Ready"
 
         @JvmStatic
-        fun create(): ServerNotReadyException = ServerNotReadyException()
+        fun create(): GrpcServerNotReadyException = GrpcServerNotReadyException()
     }
 }

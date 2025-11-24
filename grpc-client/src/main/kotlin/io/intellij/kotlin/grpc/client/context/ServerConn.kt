@@ -7,7 +7,7 @@ import io.intellij.kotlin.grpc.context.Address
  *
  * @author tech@intellij.io
  */
-class ServerConn(
+data class ServerConn(
     val connected: Boolean = false,
     val remote: Address,
     val local: Address

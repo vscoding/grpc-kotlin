@@ -41,7 +41,7 @@ class GrpcConnClientInterceptor(
                 try {
                     super.cancel(message, cause)
                 } finally {
-                    registryOperator.setServerNotReady()
+                    registryOperator.markServerNotReady()
                     log.error(
                         "GrpcConnectionClientInterceptor cancel {}",
                         if (Objects.nonNull(cause)) cause!!.javaClass else "NULL"

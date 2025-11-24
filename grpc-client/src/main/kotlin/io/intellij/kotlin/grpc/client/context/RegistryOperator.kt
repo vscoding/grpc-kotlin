@@ -12,22 +12,31 @@ import kotlin.concurrent.Volatile
  * @author tech@intellij.io
  */
 interface RegistryOperator {
-    /**
-     * Sets the server to a ready state.
-     */
-    fun setServerReady()
+
 
     /**
-     * Sets the server to a not ready state.
+     * Marks the server as ready to receive requests.
+     *
+     * This method updates the server's readiness state, typically changing it
+     * to indicate that the server is now prepared to handle incoming operations or connections.
      */
-    fun setServerNotReady()
+    fun markServerReady()
+
+
+    /**
+     * Marks the server as not ready to receive requests.
+     *
+     * This method updates the server's readiness state, typically changing it to indicate
+     * that the server is no longer prepared to handle incoming operations or connections.
+     */
+    fun markServerNotReady()
 
     /**
      * Returns the status of the server readiness.
      *
      * @return `true` if the server is ready, `false` otherwise.
      */
-    fun getServerReady(): Boolean
+    fun isServerReady(): Boolean
 
     /**
      * Sets the server connection details.
@@ -85,16 +94,16 @@ interface RegistryOperator {
 
         private val connLock: Lock = ReentrantLock()
 
-        override fun setServerReady() {
+        override fun markServerReady() {
             severConnRegistry.serverReady.set(true)
         }
 
-        override fun setServerNotReady() {
+        override fun markServerNotReady() {
             severConnRegistry.serverReady.set(false)
         }
 
 
-        override fun getServerReady(): Boolean {
+        override fun isServerReady(): Boolean {
             return severConnRegistry.serverReady.get()
         }
 
@@ -121,7 +130,7 @@ interface RegistryOperator {
             connLock.lock()
             try {
                 this.setServerConn(remoteHost, remotePort, localPort)
-                this.setServerReady()
+                this.markServerReady()
             } finally {
                 connLock.unlock()
             }
@@ -131,7 +140,7 @@ interface RegistryOperator {
             connLock.lock()
             try {
                 this.clearServerConn()
-                this.setServerNotReady()
+                this.markServerNotReady()
             } finally {
                 connLock.unlock()
             }
