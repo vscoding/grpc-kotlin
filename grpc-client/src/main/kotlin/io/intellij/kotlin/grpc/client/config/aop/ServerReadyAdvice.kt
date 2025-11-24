@@ -21,7 +21,7 @@ class ServerReadyAdvice(
 ) {
     private val log = getLogger(ServerReadyAdvice::class.java)
 
-    @Pointcut("execution(* io.intellij.kotlin.grpc.client..*.*(..)) && @annotation(io.intellij.kotlin.grpc.client.config.anno.ServerReadyThen)")
+    @Pointcut("execution(* io.intellij.kotlin.grpc.client..*.*(..)) && @annotation(io.intellij.kotlin.grpc.client.config.anno.RequireGrpcServerReady)")
     fun pointCut() {
     }
 

@@ -1,6 +1,6 @@
 package io.intellij.kotlin.grpc.client.test
 
-import io.intellij.kotlin.grpc.client.config.anno.ServerReadyThen
+import io.intellij.kotlin.grpc.client.config.anno.RequireGrpcServerReady
 import io.intellij.kotlin.grpc.client.config.getLogger
 import io.intellij.kotlin.grpc.client.context.GrpcApplicationContext
 import io.intellij.kotlin.grpc.client.context.ServerConn
@@ -31,8 +31,8 @@ class GrpcClientTestController(
     private val tasks: MutableList<CronTask>
 ) {
 
+    @RequireGrpcServerReady
     @GetMapping("/")
-    @ServerReadyThen
     fun grpc(): MutableMap<String, Any> {
         val grpc: String = testService.test(grpcApplicationContext.applicationName)
         return mutableMapOf(
