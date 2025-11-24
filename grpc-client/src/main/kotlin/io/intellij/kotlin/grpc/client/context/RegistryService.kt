@@ -7,11 +7,11 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.Volatile
 
 /**
- * RegistryOperator
+ * RegistryService
  *
  * @author tech@intellij.io
  */
-interface RegistryOperator {
+interface RegistryService {
 
 
     /**
@@ -83,11 +83,11 @@ interface RegistryOperator {
 
 
     @Service
-    class DefaultSharedOperator(
+    class DefaultRegistryService(
         private val severConnRegistry: ServerConnRegistry
-    ) : RegistryOperator {
+    ) : RegistryService {
 
-        private val log = getLogger(DefaultSharedOperator::class.java)
+        private val log = getLogger(DefaultRegistryService::class.java)
 
         @Volatile
         private var currentConn: ServerConn = ServerConn.DEFAULT

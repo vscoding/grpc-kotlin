@@ -2,7 +2,7 @@ package io.intellij.kotlin.grpc.server.config
 
 import io.grpc.ServerBuilder
 import io.grpc.ServerTransportFilter
-import io.intellij.kotlin.grpc.server.context.RegistryOperator
+import io.intellij.kotlin.grpc.server.context.RegistryService
 import io.intellij.kotlin.grpc.server.filter.MonitoringServerTransportFilter
 import net.devh.boot.grpc.server.serverfactory.GrpcServerConfigurer
 import org.springframework.context.annotation.Bean
@@ -18,8 +18,8 @@ class GrpcServerTransportFilterConfig {
     private val log = getLogger(GrpcServerTransportFilterConfig::class.java)
 
     @Bean
-    fun monitoringServerTransportFilter(registryOperator: RegistryOperator): ServerTransportFilter {
-        return MonitoringServerTransportFilter(registryOperator)
+    fun monitoringServerTransportFilter(registryService: RegistryService): ServerTransportFilter {
+        return MonitoringServerTransportFilter(registryService)
     }
 
     /**

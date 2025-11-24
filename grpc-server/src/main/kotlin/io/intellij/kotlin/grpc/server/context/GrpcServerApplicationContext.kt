@@ -36,7 +36,7 @@ interface GrpcServerApplicationContext : ApplicationContextAware {
 
     @Component
     class DefaultGrpcServerApplicationContext(
-        private val registryOperator: RegistryOperator
+        private val registryService: RegistryService
     ) : GrpcServerApplicationContext {
         private val log = getLogger(DefaultGrpcServerApplicationContext::class.java)
         private var applicationContext: ApplicationContext? = null
@@ -52,11 +52,11 @@ interface GrpcServerApplicationContext : ApplicationContextAware {
         }
 
         override fun liveClients(): List<ClientConn> {
-            return registryOperator.getLiveClients()
+            return registryService.getLiveClients()
         }
 
         override fun historyClients(): List<ClientConn> {
-            return registryOperator.getHistoryClients()
+            return registryService.getHistoryClients()
         }
     }
 }

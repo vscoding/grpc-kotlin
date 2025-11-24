@@ -1,7 +1,7 @@
 package io.intellij.kotlin.grpc.client.config.anno
 
 /**
- * ServerReadyThen
+ * RequireGrpcServerReady
  *
  * @author tech@intellij.io
  */

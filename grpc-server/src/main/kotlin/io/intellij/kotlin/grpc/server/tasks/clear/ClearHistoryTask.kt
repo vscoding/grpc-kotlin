@@ -1,6 +1,6 @@
 package io.intellij.kotlin.grpc.server.tasks.clear
 
-import io.intellij.kotlin.grpc.server.context.RegistryOperator
+import io.intellij.kotlin.grpc.server.context.RegistryService
 import io.intellij.kotlin.grpc.task.AbstractCronTask
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.stereotype.Service
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 @Service
 class ClearHistoryTask(
     private val taskScheduler: TaskScheduler,
-    private val registryOperator: RegistryOperator
+    private val registryService: RegistryService
 ) : AbstractCronTask() {
 
     override fun getTaskScheduler(): TaskScheduler {
@@ -26,7 +26,7 @@ class ClearHistoryTask(
     }
 
     override fun getRunnable(): Runnable {
-        return Runnable { registryOperator.clearHistoryClients() }
+        return Runnable { registryService.clearHistoryClients() }
     }
 
 }

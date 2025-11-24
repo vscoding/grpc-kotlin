@@ -8,7 +8,7 @@ import io.grpc.ForwardingClientCall.SimpleForwardingClientCall
 import io.grpc.Metadata
 import io.grpc.MethodDescriptor
 import io.intellij.kotlin.grpc.client.config.getLogger
-import io.intellij.kotlin.grpc.client.context.RegistryOperator
+import io.intellij.kotlin.grpc.client.context.RegistryService
 import java.util.Objects
 
 /**
@@ -17,7 +17,7 @@ import java.util.Objects
  * @author tech@intellij.io
  */
 class GrpcConnClientInterceptor(
-    val registryOperator: RegistryOperator
+    val registryService: RegistryService
 ) : ClientInterceptor {
     private val log = getLogger(GrpcConnClientInterceptor::class.java)
 
@@ -27,12 +27,12 @@ class GrpcConnClientInterceptor(
     ): ClientCall<ReqT, RespT> {
 
         return object : SimpleForwardingClientCall<ReqT, RespT>(next.newCall<ReqT, RespT>(method, callOptions)) {
-            override fun start(responseListener: Listener<RespT?>?, headers: Metadata?) {
+            override fun start(responseListener: Listener<RespT>, headers: Metadata?) {
                 // log.debug("GrpcConnectionClientInterceptor start");
                 super.start(responseListener, headers)
             }
 
-            override fun sendMessage(message: ReqT?) {
+            override fun sendMessage(message: ReqT) {
                 // log.debug("GrpcConnectionClientInterceptor sendMessage");
                 super.sendMessage(message)
             }
@@ -41,7 +41,7 @@ class GrpcConnClientInterceptor(
                 try {
                     super.cancel(message, cause)
                 } finally {
-                    registryOperator.markServerNotReady()
+                    registryService.markServerNotReady()
                     log.error(
                         "GrpcConnectionClientInterceptor cancel {}",
                         if (Objects.nonNull(cause)) cause!!.javaClass else "NULL"

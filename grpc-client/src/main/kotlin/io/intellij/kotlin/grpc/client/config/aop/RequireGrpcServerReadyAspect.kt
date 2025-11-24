@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.Pointcut
 import org.springframework.stereotype.Component
 
 /**
- * ServerReadyAdvice
+ * RequireGrpcServerReadyAspect
  *
  * @author tech@intellij.io
  */

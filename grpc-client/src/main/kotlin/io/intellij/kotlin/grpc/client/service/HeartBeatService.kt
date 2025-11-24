@@ -4,7 +4,7 @@ import io.intellij.kotlin.grpc.api.HeartBeatProto
 import io.intellij.kotlin.grpc.api.HeartBeatServiceGrpc
 import io.intellij.kotlin.grpc.client.config.GrpcConfig
 import io.intellij.kotlin.grpc.client.config.getLogger
-import io.intellij.kotlin.grpc.client.context.RegistryOperator
+import io.intellij.kotlin.grpc.client.context.RegistryService
 import net.devh.boot.grpc.client.inject.GrpcClient
 import org.springframework.stereotype.Service
 
@@ -18,7 +18,7 @@ interface HeartBeatService {
 
     @Service
     class DefaultHeartBeatService(
-        private val registryOperator: RegistryOperator,
+        private val registryService: RegistryService,
     ) : HeartBeatService {
         private val log = getLogger(DefaultHeartBeatService::class.java)
 
@@ -37,7 +37,7 @@ interface HeartBeatService {
                     HeartBeatProto.Ping.newBuilder().setId(content).build()
                 )
                 log.debug("HeartBeat Down. Pong; Resp={}", pong.getRes())
-                registryOperator.markServerReady()
+                registryService.markServerReady()
             } catch (_: Exception) {
                 // {@link io.intellij.kotlin.grpc.client.config.interceptor.GrpcConnectionClientInterceptor} cancel
                 // sharedOperator.setServerNotReady();

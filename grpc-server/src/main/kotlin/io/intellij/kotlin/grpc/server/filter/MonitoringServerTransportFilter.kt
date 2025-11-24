@@ -5,7 +5,7 @@ import io.grpc.Grpc
 import io.grpc.ServerTransportFilter
 import io.intellij.kotlin.grpc.context.Address
 import io.intellij.kotlin.grpc.server.config.getLogger
-import io.intellij.kotlin.grpc.server.context.RegistryOperator
+import io.intellij.kotlin.grpc.server.context.RegistryService
 import java.net.InetSocketAddress
 
 /**
@@ -14,20 +14,20 @@ import java.net.InetSocketAddress
  * @author tech@intellij.io
  */
 class MonitoringServerTransportFilter(
-    val registryOperator: RegistryOperator
+    val registryService: RegistryService
 ) : ServerTransportFilter() {
     private val log = getLogger(MonitoringServerTransportFilter::class.java)
 
     override fun transportReady(transportAttrs: Attributes): Attributes? {
         log.info("transport ready: {}", transportAttrs)
-        registryOperator.up(
+        registryService.markUp(
             Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false)
         )
         return super.transportReady(transportAttrs)
     }
 
     override fun transportTerminated(transportAttrs: Attributes) {
-        registryOperator.down(
+        registryService.markDown(
             Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false)
         )
         val client = transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)
