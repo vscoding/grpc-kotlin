@@ -1,6 +1,6 @@
 package io.intellij.kotlin.grpc.client.config.aop
 
-import io.intellij.kotlin.grpc.client.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.client.context.GrpcApplicationContext
 import io.intellij.kotlin.grpc.client.expection.GrpcServerNotReadyException
 import org.aspectj.lang.ProceedingJoinPoint

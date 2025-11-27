@@ -1,6 +1,6 @@
 package io.intellij.kotlin.grpc.client.context
 
-import io.intellij.kotlin.grpc.client.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import org.springframework.stereotype.Service
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock

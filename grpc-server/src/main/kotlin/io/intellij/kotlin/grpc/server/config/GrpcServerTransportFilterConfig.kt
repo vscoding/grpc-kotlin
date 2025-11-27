@@ -2,6 +2,7 @@ package io.intellij.kotlin.grpc.server.config
 
 import io.grpc.ServerBuilder
 import io.grpc.ServerTransportFilter
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.server.context.RegistryService
 import io.intellij.kotlin.grpc.server.filter.MonitoringServerTransportFilter
 import net.devh.boot.grpc.server.serverfactory.GrpcServerConfigurer

@@ -7,7 +7,7 @@ import io.intellij.kotlin.grpc.api.ServerStreamServiceGrpc
 import io.intellij.kotlin.grpc.api.stream.StreamRequest
 import io.intellij.kotlin.grpc.api.stream.StreamResponse
 import io.intellij.kotlin.grpc.client.config.GrpcConfig
-import io.intellij.kotlin.grpc.client.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import net.devh.boot.grpc.client.inject.GrpcClient
 import org.springframework.core.task.TaskExecutor
 import org.springframework.stereotype.Service

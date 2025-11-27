@@ -4,7 +4,7 @@ import io.grpc.stub.StreamObserver
 import io.intellij.kotlin.grpc.api.HeartBeatServiceGrpc
 import io.intellij.kotlin.grpc.api.common.Ping
 import io.intellij.kotlin.grpc.api.common.Pong
-import io.intellij.kotlin.grpc.server.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import net.devh.boot.grpc.server.service.GrpcService
 
 /**

@@ -7,7 +7,7 @@ import io.grpc.ClientInterceptor
 import io.grpc.ForwardingClientCall.SimpleForwardingClientCall
 import io.grpc.Metadata
 import io.grpc.MethodDescriptor
-import io.intellij.kotlin.grpc.client.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.client.context.RegistryService
 import java.util.Objects
 

@@ -5,7 +5,7 @@ import io.grpc.Metadata
 import io.grpc.ServerCall
 import io.grpc.ServerCallHandler
 import io.grpc.ServerInterceptor
-import io.intellij.kotlin.grpc.server.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import java.util.concurrent.atomic.AtomicInteger
 
 /**

@@ -1,7 +1,7 @@
 package io.intellij.kotlin.grpc.client.test
 
 import io.intellij.kotlin.grpc.client.config.anno.RequireGrpcServerReady
-import io.intellij.kotlin.grpc.client.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.client.context.GrpcApplicationContext
 import io.intellij.kotlin.grpc.client.context.ServerConn
 import io.intellij.kotlin.grpc.client.entities.GreetReq

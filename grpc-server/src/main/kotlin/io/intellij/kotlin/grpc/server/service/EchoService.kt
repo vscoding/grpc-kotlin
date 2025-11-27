@@ -3,7 +3,7 @@ package io.intellij.kotlin.grpc.server.service
 import io.grpc.stub.StreamObserver
 import io.intellij.kotlin.grpc.api.EchoProto
 import io.intellij.kotlin.grpc.api.HelloServiceGrpc
-import io.intellij.kotlin.grpc.server.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import net.devh.boot.grpc.server.service.GrpcService
 
 /**

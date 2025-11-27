@@ -1,7 +1,7 @@
 package io.intellij.kotlin.grpc.server.tasks.print
 
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.commons.task.AbstractCronTask
-import io.intellij.kotlin.grpc.server.config.getLogger
 import io.intellij.kotlin.grpc.server.context.GrpcServerApplicationContext
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.stereotype.Service

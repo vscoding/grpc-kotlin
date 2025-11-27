@@ -3,8 +3,8 @@ package io.intellij.kotlin.grpc.server.filter
 import io.grpc.Attributes
 import io.grpc.Grpc
 import io.grpc.ServerTransportFilter
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.context.Address
-import io.intellij.kotlin.grpc.server.config.getLogger
 import io.intellij.kotlin.grpc.server.context.RegistryService
 import java.net.InetSocketAddress
 

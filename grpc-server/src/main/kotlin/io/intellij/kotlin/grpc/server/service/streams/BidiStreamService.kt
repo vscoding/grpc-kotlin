@@ -4,7 +4,7 @@ import io.grpc.stub.StreamObserver
 import io.intellij.kotlin.grpc.api.BidiStreamServiceGrpc
 import io.intellij.kotlin.grpc.api.stream.StreamRequest
 import io.intellij.kotlin.grpc.api.stream.StreamResponse
-import io.intellij.kotlin.grpc.server.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import net.devh.boot.grpc.server.service.GrpcService
 
 /**

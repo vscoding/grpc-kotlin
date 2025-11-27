@@ -3,7 +3,7 @@ package io.intellij.kotlin.grpc.client.service
 import io.intellij.kotlin.grpc.api.HeartBeatServiceGrpc
 import io.intellij.kotlin.grpc.api.common.Ping
 import io.intellij.kotlin.grpc.client.config.GrpcConfig
-import io.intellij.kotlin.grpc.client.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.client.context.RegistryService
 import net.devh.boot.grpc.client.inject.GrpcClient
 import org.springframework.stereotype.Service

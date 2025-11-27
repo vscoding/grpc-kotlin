@@ -18,4 +18,5 @@ kotlin {
 
 dependencies {
     implementation(libs.spring.boot)
+    implementation(libs.spring.boot.starter.logging)
 }

@@ -1,6 +1,6 @@
 package io.intellij.kotlin.grpc.server.test
 
-import io.intellij.kotlin.grpc.server.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.server.context.ClientConn
 import io.intellij.kotlin.grpc.server.context.GrpcServerApplicationContext
 import org.springframework.http.ResponseEntity

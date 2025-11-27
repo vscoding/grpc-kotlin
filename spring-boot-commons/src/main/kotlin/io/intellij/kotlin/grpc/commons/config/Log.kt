@@ -1,4 +1,4 @@
-package io.intellij.kotlin.grpc.client.config
+package io.intellij.kotlin.grpc.commons.config
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -15,6 +15,6 @@ fun getLogger(forClass: Class<*>): Logger = LoggerFactory.getLogger(forClass)
 
 /*
 abstract class Log {
-    val log: Logger = LoggerFactory.io.intellij.kotlin.grpc.client.config.getLogger(this.javaClass)
+    val log: Logger = LoggerFactory.io.intellij.kotlin.grpc.commons.config.getLogger(this.javaClass)
 }
 */

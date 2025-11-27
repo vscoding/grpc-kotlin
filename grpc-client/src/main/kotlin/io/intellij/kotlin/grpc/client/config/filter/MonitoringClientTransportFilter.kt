@@ -3,7 +3,7 @@ package io.intellij.kotlin.grpc.client.config.filter
 import io.grpc.Attributes
 import io.grpc.ClientTransportFilter
 import io.grpc.Grpc
-import io.intellij.kotlin.grpc.client.config.getLogger
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.client.context.RegistryService
 import io.intellij.kotlin.grpc.context.Address
 
