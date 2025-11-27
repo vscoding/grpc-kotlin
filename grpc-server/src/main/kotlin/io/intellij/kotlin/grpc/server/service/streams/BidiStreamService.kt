@@ -22,10 +22,12 @@ class BidiStreamService : BidiStreamServiceGrpc.BidiStreamServiceImplBase() {
 
             override fun onNext(request: StreamRequest) {
                 // echo back
-                request.data.let {
+                request.data.also {
                     log.info("[Bidi Stream]receive data: {}", it)
                     StreamResponse.newBuilder().setData("[Bidi Stream] Response data: $it").build()
-                        .let { response -> responseObserver.onNext(response) }
+                        .also { response ->
+                            responseObserver.onNext(response)
+                        }
                 }
             }
 

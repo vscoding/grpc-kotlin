@@ -23,7 +23,7 @@ class ClientStreamService : ClientStreamServiceGrpc.ClientStreamServiceImplBase(
             private val dataList = mutableListOf<String>()
 
             override fun onNext(request: StreamRequest) {
-                request.data.let {
+                request.data.also {
                     log.info("[Client Stream] receive data: {}", it)
                     dataList.add(it)
                 }

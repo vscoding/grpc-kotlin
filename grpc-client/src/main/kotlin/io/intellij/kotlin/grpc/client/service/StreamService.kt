@@ -86,7 +86,7 @@ class DefaultStreamService(
             private val dataList = mutableListOf<String>()
 
             override fun onNext(response: StreamResponse) {
-                response.data.let { respData ->
+                response.data.also { respData ->
                     log.info("[Server Stream] Received response from server: {}", respData)
                     dataList.add(respData)
                 }
@@ -109,7 +109,7 @@ class DefaultStreamService(
 
         bidiStreamServiceGrpcStub.bidiStreaming(object : StreamObserver<StreamResponse> {
             override fun onNext(response: StreamResponse) {
-                response.data.let { respData ->
+                response.data.also { respData ->
                     taskExecutor.execute { log.info("[Bidi Stream] Received response from server: {}", respData) }
                 }
             }
@@ -122,7 +122,7 @@ class DefaultStreamService(
                 log.info("[Bidi Stream] completed")
             }
 
-        }).let { requestObserver ->
+        }).also { requestObserver ->
             for (i in 1..count) {
                 requestObserver.onNext(StreamRequest.newBuilder().setData("[Bidi Stream] Request Data: $i").build())
                 sleep(100)

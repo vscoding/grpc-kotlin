@@ -48,8 +48,8 @@ abstract class AbstractCronTask : CronTask, InitializingBean {
         if (!status.compareAndSet(false, true)) {
             return
         }
-        getRunnable()?.let {
-            future = getTaskScheduler()?.schedule(it, CronTrigger(cron()))
+        this.future = getRunnable()?.let {
+            getTaskScheduler()?.schedule(it, CronTrigger(cron()))
         }
     }
 
@@ -57,8 +57,8 @@ abstract class AbstractCronTask : CronTask, InitializingBean {
         if (!status.compareAndSet(true, false)) {
             return
         }
-        if (future != null) {
-            future!!.cancel(true)
+        this.future?.also {
+            it.cancel(true)
         }
     }
 
