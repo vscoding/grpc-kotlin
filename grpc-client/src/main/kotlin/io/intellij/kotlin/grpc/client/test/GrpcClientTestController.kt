@@ -1,7 +1,6 @@
 package io.intellij.kotlin.grpc.client.test
 
 import io.intellij.kotlin.grpc.client.config.anno.RequireGrpcServerReady
-import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.client.context.GrpcApplicationContext
 import io.intellij.kotlin.grpc.client.context.ServerConn
 import io.intellij.kotlin.grpc.client.entities.GreetReq
@@ -9,7 +8,9 @@ import io.intellij.kotlin.grpc.client.entities.GreetResp
 import io.intellij.kotlin.grpc.client.service.HeartBeatService
 import io.intellij.kotlin.grpc.client.service.StreamService
 import io.intellij.kotlin.grpc.client.service.TestService
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.commons.task.CronTask
+import io.intellij.kotlin.grpc.commons.task.TaskStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -82,12 +83,6 @@ class GrpcClientTestController(
             )
         }.toMutableList()
     }
-
-    data class TaskStatus(
-        val className: String,
-        val cron: String,
-        val running: Boolean
-    )
 
     @GetMapping("/heartBeat")
     fun heartBeat() {
