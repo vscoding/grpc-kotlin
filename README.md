@@ -20,7 +20,7 @@ It showcases readiness guarding via AOP, connection monitoring with transport fi
 - `protos`  
   Protobuf definitions and generated sources used by both client and server.
 
-- `spring-boot-commons`
+- `spring-boot-commons`  
   Common Spring Boot configuration, utilities, exceptions, and cron task abstraction.
 
 - `grpc-server`  
