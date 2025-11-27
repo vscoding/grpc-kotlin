@@ -1,18 +1,10 @@
 syntax = "proto3";
 
+import "types/common.proto";
+
 option java_multiple_files = false;
-
 option java_package = "io.intellij.kotlin.grpc.api";
-
 option java_outer_classname = "HeartBeatProto";
-
-message Ping{
-  string id = 1;
-}
-
-message Pong{
-  string res = 1;
-}
 
 service HeartBeatService{
   rpc report(Ping) returns (Pong);

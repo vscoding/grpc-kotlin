@@ -1,7 +1,7 @@
 package io.intellij.kotlin.grpc.client.service
 
+import io.intellij.kotlin.grpc.api.EchoProto
 import io.intellij.kotlin.grpc.api.HelloServiceGrpc
-import io.intellij.kotlin.grpc.api.TestProto
 import io.intellij.kotlin.grpc.client.config.GrpcConfig
 import io.intellij.kotlin.grpc.client.entities.GreetReq
 import io.intellij.kotlin.grpc.client.entities.GreetResp
@@ -16,13 +16,8 @@ import org.springframework.stereotype.Service
  * @author tech@intellij.io
  */
 interface TestService {
-    /**
-     * Performs a test operation using the given name.
-     *
-     * @param name the name to be used for testing
-     * @return the result of the test operation as a string
-     */
-    fun test(name: String?): String
+
+    fun test(name: String): String
 
     /**
      * Performs a greet operation using the given GreetReq object.
@@ -41,18 +36,16 @@ interface TestService {
         @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
         private lateinit var multiServiceBlockingStub: MultiServiceGrpc.MultiServiceBlockingStub
 
-        override fun test(name: String?): String {
-            val helloResponse: TestProto.HelloResponse = helloServiceBlockingStub.test(
-                TestProto.HelloRequest.newBuilder().setName(name).build()
+        override fun test(name: String): String {
+            val helloResponse: EchoProto.HelloResponse = helloServiceBlockingStub.greeting(
+                EchoProto.HelloRequest.newBuilder().setName(name).build()
             )
             return helloResponse.getWelcome()
         }
 
         override fun greet(req: GreetReq): GreetResp {
             return GrpcConvertUtils.convert(
-                multiServiceBlockingStub.sayHello(
-                    req.convert()
-                )
+                multiServiceBlockingStub.sayHello(req.cast())
             )
         }
     }

@@ -1,7 +1,7 @@
 package io.intellij.kotlin.grpc.client.service
 
-import io.intellij.kotlin.grpc.api.HeartBeatProto
 import io.intellij.kotlin.grpc.api.HeartBeatServiceGrpc
+import io.intellij.kotlin.grpc.api.common.Ping
 import io.intellij.kotlin.grpc.client.config.GrpcConfig
 import io.intellij.kotlin.grpc.client.config.getLogger
 import io.intellij.kotlin.grpc.client.context.RegistryService
@@ -33,9 +33,7 @@ interface HeartBeatService {
         override fun doHeartBeat(content: String) {
             log.debug("HeartBeat Report. Ping. Content={}", content)
             try {
-                val pong: HeartBeatProto.Pong = heartBeatServiceBlockingStub.report(
-                    HeartBeatProto.Ping.newBuilder().setId(content).build()
-                )
+                val pong = heartBeatServiceBlockingStub.report(Ping.newBuilder().setId(content).build())
                 log.debug("HeartBeat Down. Pong; Resp={}", pong.getRes())
                 registryService.markServerReady()
             } catch (_: Exception) {
@@ -45,5 +43,4 @@ interface HeartBeatService {
             }
         }
     }
-
 }

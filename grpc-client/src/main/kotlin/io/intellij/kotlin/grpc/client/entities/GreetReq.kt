@@ -33,11 +33,12 @@ class GreetReq(
         }
     }
 
-    override fun convert(): GreetRequest {
+    override fun cast(): GreetRequest {
         return GreetRequest.newBuilder()
             .setId(id).setName(name)
             .setGenderValue(gender.value)
             .addAllEmails(emails)
             .build()
     }
+
 }
