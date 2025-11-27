@@ -1,7 +1,7 @@
 package io.intellij.kotlin.grpc.client.tasks.hb
 
 import io.intellij.kotlin.grpc.client.service.HeartBeatService
-import io.intellij.kotlin.grpc.task.AbstractCronTask
+import io.intellij.kotlin.grpc.commons.task.AbstractCronTask
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.stereotype.Service
 import java.util.UUID

@@ -8,6 +8,6 @@ spring:
 
 logging:
   level:
-    io.intellij.kotlin.grpc.client.service.HeartBeatService: debug
+    io.intellij.kotlin.grpc.client.service.DefaultHeartBeatService: debug
     io.intellij.kotlin.grpc.client.config.filter.MonitoringClientTransportFilter: debug
     io.intellij.kotlin.grpc.client.config.interceptor.GrpcConnClientInterceptor: debug

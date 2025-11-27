@@ -32,35 +32,33 @@ interface GrpcApplicationContext : ApplicationContextAware {
      */
     fun serverReady(): Boolean
 
-
     /**
      * Retrieves the server connection information.
      *
      * @return The server connection information as a ServerConn object.
      */
     fun serverConn(): ServerConn
+}
 
+@Service
+class DefaultGrpcApplicationContextImpl(
+    private val serverConnRegistry: ServerConnRegistry,
+    @param:Value("\${spring.application.name}") private val appName: String
+) : GrpcApplicationContext {
 
-    @Service
-    class DefaultGrpcApplicationContextImpl(
-        private val serverConnRegistry: ServerConnRegistry,
-        @param:Value("\${spring.application.name}") private val appName: String
-    ) : GrpcApplicationContext {
+    private var applicationContext: ApplicationContext? = null
 
-        private var applicationContext: ApplicationContext? = null
+    override val applicationName: String
+        get() = this.appName
 
-        override val applicationName: String
-            get() = this.appName
+    override val springApplicationContext: ApplicationContext?
+        get() = this.applicationContext
 
-        override val springApplicationContext: ApplicationContext?
-            get() = this.applicationContext
+    override fun serverReady(): Boolean = serverConnRegistry.serverReady.get()
 
-        override fun serverReady(): Boolean = serverConnRegistry.serverReady.get()
+    override fun serverConn(): ServerConn = serverConnRegistry.serverConn.get()
 
-        override fun serverConn(): ServerConn = serverConnRegistry.serverConn.get()
-
-        override fun setApplicationContext(applicationContext: ApplicationContext) {
-            this.applicationContext = applicationContext
-        }
+    override fun setApplicationContext(applicationContext: ApplicationContext) {
+        this.applicationContext = applicationContext
     }
 }

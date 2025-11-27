@@ -14,6 +14,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "grpc-kotlin"
 
-include("proto")
+include("protos")
+include("spring-boot-commons")
 include("grpc-client")
 include("grpc-server")

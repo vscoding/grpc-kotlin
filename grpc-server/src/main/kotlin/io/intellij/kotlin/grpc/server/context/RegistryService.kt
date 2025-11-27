@@ -50,46 +50,47 @@ interface RegistryService {
      */
     fun clearHistoryClients()
 
-    @Service
-    class DefaultRegistryService(
-        val clientConnRegistry: ClientConnRegistry
-    ) : RegistryService {
-        private val log = getLogger(DefaultRegistryService::class.java)
+}
 
-        private val lock: Lock = ReentrantLock()
 
-        override fun markUp(client: Address) {
-            lock.lock()
-            try {
-                clientConnRegistry.live[client] = ClientConn.up(client)
-            } finally {
-                lock.unlock()
-            }
-        }
+@Service
+class DefaultRegistryService(
+    val clientConnRegistry: ClientConnRegistry
+) : RegistryService {
+    private val log = getLogger(DefaultRegistryService::class.java)
 
-        override fun markDown(client: Address) {
-            lock.lock()
-            try {
-                clientConnRegistry.live.remove(client)
-                log.info("add history")
-                clientConnRegistry.history.add(ClientConn.down(client))
-            } finally {
-                lock.unlock()
-            }
-        }
+    private val lock: Lock = ReentrantLock()
 
-        override fun getLiveClients(): List<ClientConn> = clientConnRegistry.live.values.toList()
-
-        override fun getHistoryClients(): List<ClientConn> = clientConnRegistry.live.values.toList()
-
-        override fun clearHistoryClients() {
-            lock.lock()
-            try {
-                clientConnRegistry.clearHistoryClients()
-            } finally {
-                lock.unlock()
-            }
+    override fun markUp(client: Address) {
+        lock.lock()
+        try {
+            clientConnRegistry.live[client] = ClientConn.up(client)
+        } finally {
+            lock.unlock()
         }
     }
 
+    override fun markDown(client: Address) {
+        lock.lock()
+        try {
+            clientConnRegistry.live.remove(client)
+            log.info("add history")
+            clientConnRegistry.history.add(ClientConn.down(client))
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    override fun getLiveClients(): List<ClientConn> = clientConnRegistry.live.values.toList()
+
+    override fun getHistoryClients(): List<ClientConn> = clientConnRegistry.live.values.toList()
+
+    override fun clearHistoryClients() {
+        lock.lock()
+        try {
+            clientConnRegistry.clearHistoryClients()
+        } finally {
+            lock.unlock()
+        }
+    }
 }

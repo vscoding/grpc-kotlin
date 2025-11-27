@@ -8,7 +8,7 @@ import io.intellij.kotlin.grpc.client.entities.GreetReq
 import io.intellij.kotlin.grpc.client.entities.GreetResp
 import io.intellij.kotlin.grpc.client.service.HeartBeatService
 import io.intellij.kotlin.grpc.client.service.TestService
-import io.intellij.kotlin.grpc.task.CronTask
+import io.intellij.kotlin.grpc.commons.task.CronTask
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler

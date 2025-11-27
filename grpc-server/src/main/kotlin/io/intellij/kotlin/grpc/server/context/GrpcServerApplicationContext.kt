@@ -33,30 +33,31 @@ interface GrpcServerApplicationContext : ApplicationContextAware {
      * @return A List of ClientConn objects representing the historical clients.
      */
     fun historyClients(): List<ClientConn>
+}
 
-    @Component
-    class DefaultGrpcServerApplicationContext(
-        private val registryService: RegistryService
-    ) : GrpcServerApplicationContext {
-        private val log = getLogger(DefaultGrpcServerApplicationContext::class.java)
-        private var applicationContext: ApplicationContext? = null
 
-        @Throws(BeansException::class)
-        override fun setApplicationContext(@NonNull applicationContext: ApplicationContext) {
-            log.info("ApplicationContext Aware")
-            this.applicationContext = applicationContext
-        }
+@Component
+class DefaultGrpcServerApplicationContext(
+    private val registryService: RegistryService
+) : GrpcServerApplicationContext {
+    private val log = getLogger(DefaultGrpcServerApplicationContext::class.java)
+    private var applicationContext: ApplicationContext? = null
 
-        override fun getSpringApplicationContext(): ApplicationContext? {
-            return this.applicationContext
-        }
+    @Throws(BeansException::class)
+    override fun setApplicationContext(@NonNull applicationContext: ApplicationContext) {
+        log.info("ApplicationContext Aware")
+        this.applicationContext = applicationContext
+    }
 
-        override fun liveClients(): List<ClientConn> {
-            return registryService.getLiveClients()
-        }
+    override fun getSpringApplicationContext(): ApplicationContext? {
+        return this.applicationContext
+    }
 
-        override fun historyClients(): List<ClientConn> {
-            return registryService.getHistoryClients()
-        }
+    override fun liveClients(): List<ClientConn> {
+        return registryService.getLiveClients()
+    }
+
+    override fun historyClients(): List<ClientConn> {
+        return registryService.getHistoryClients()
     }
 }

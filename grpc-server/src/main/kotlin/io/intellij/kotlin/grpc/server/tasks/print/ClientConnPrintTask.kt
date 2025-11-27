@@ -1,8 +1,8 @@
 package io.intellij.kotlin.grpc.server.tasks.print
 
+import io.intellij.kotlin.grpc.commons.task.AbstractCronTask
 import io.intellij.kotlin.grpc.server.config.getLogger
 import io.intellij.kotlin.grpc.server.context.GrpcServerApplicationContext
-import io.intellij.kotlin.grpc.task.AbstractCronTask
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.stereotype.Service
 
@@ -28,11 +28,12 @@ class ClientConnPrintTask(
 
     override fun getRunnable(): Runnable {
         return Runnable {
-            log.debug("List Client's Connections .START")
-            grpcServerApplicationContext.liveClients().forEach {
-                log.debug("up client = {}", it)
+            val liveClients = grpcServerApplicationContext.liveClients()
+            if (liveClients.isEmpty()) {
+                log.debug("No Client's Connections")
+            } else {
+                log.debug("Live Clients:{}", liveClients)
             }
-            log.debug("List Client's Connections .END")
         }
     }
 

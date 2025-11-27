@@ -1,7 +1,7 @@
 package io.intellij.kotlin.grpc.server.tasks.clear
 
+import io.intellij.kotlin.grpc.commons.task.AbstractCronTask
 import io.intellij.kotlin.grpc.server.context.RegistryService
-import io.intellij.kotlin.grpc.task.AbstractCronTask
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.stereotype.Service
 

@@ -13,7 +13,6 @@ import kotlin.concurrent.Volatile
  */
 interface RegistryService {
 
-
     /**
      * Marks the server as ready to receive requests.
      *
@@ -80,70 +79,70 @@ interface RegistryService {
      * After calling this method, the connection to the server will be terminated and the server details will be reset to their default values.
      */
     fun disconnect()
+}
+
+@Service
+class DefaultRegistryService(
+    private val severConnRegistry: ServerConnRegistry
+) : RegistryService {
+
+    private val log = getLogger(DefaultRegistryService::class.java)
+
+    @Volatile
+    private var currentConn: ServerConn = ServerConn.DEFAULT
+
+    private val connLock: Lock = ReentrantLock()
+
+    override fun markServerReady() {
+        severConnRegistry.serverReady.set(true)
+    }
+
+    override fun markServerNotReady() {
+        severConnRegistry.serverReady.set(false)
+    }
 
 
-    @Service
-    class DefaultRegistryService(
-        private val severConnRegistry: ServerConnRegistry
-    ) : RegistryService {
+    override fun isServerReady(): Boolean {
+        return severConnRegistry.serverReady.get()
+    }
 
-        private val log = getLogger(DefaultRegistryService::class.java)
-
-        @Volatile
-        private var currentConn: ServerConn = ServerConn.DEFAULT
-
-        private val connLock: Lock = ReentrantLock()
-
-        override fun markServerReady() {
-            severConnRegistry.serverReady.set(true)
-        }
-
-        override fun markServerNotReady() {
-            severConnRegistry.serverReady.set(false)
-        }
-
-
-        override fun isServerReady(): Boolean {
-            return severConnRegistry.serverReady.get()
-        }
-
-        override fun setServerConn(remoteHost: String, remotePort: Int, localPort: Int) {
-            val serverConn: ServerConn = ServerConn.create(remoteHost, remotePort, localPort)
-            if (severConnRegistry.serverConn.compareAndSet(currentConn, serverConn)) {
-                log.debug("ServerConn {}", serverConn)
-                currentConn = serverConn
-            }
-        }
-
-        override fun clearServerConn() {
-            if (severConnRegistry.serverConn.compareAndSet(currentConn, ServerConn.DEFAULT)) {
-                log.debug("Clear ServerConn {}", currentConn)
-                currentConn = ServerConn.DEFAULT
-            }
-        }
-
-        override fun getSeverConn(): ServerConn {
-            return currentConn
-        }
-
-        override fun connect(remoteHost: String, remotePort: Int, localPort: Int) {
-            connLock.lock()
-            try {
-                this.setServerConn(remoteHost, remotePort, localPort)
-                this.markServerReady()
-            } finally {
-                connLock.unlock()
-            }
-        }
-
-        override fun disconnect() {
-            connLock.lock()
-            try {
-                this.clearServerConn()
-                this.markServerNotReady()
-            } finally {
-                connLock.unlock()
-            }
+    override fun setServerConn(remoteHost: String, remotePort: Int, localPort: Int) {
+        val serverConn: ServerConn = ServerConn.create(remoteHost, remotePort, localPort)
+        if (severConnRegistry.serverConn.compareAndSet(currentConn, serverConn)) {
+            log.debug("ServerConn {}", serverConn)
+            currentConn = serverConn
         }
     }
+
+    override fun clearServerConn() {
+        if (severConnRegistry.serverConn.compareAndSet(currentConn, ServerConn.DEFAULT)) {
+            log.debug("Clear ServerConn {}", currentConn)
+            currentConn = ServerConn.DEFAULT
+        }
+    }
+
+    override fun getSeverConn(): ServerConn {
+        return currentConn
+    }
+
+    override fun connect(remoteHost: String, remotePort: Int, localPort: Int) {
+        connLock.lock()
+        try {
+            this.setServerConn(remoteHost, remotePort, localPort)
+            this.markServerReady()
+        } finally {
+            connLock.unlock()
+        }
+    }
+
+    override fun disconnect() {
+        connLock.lock()
+        try {
+            this.clearServerConn()
+            this.markServerNotReady()
+        } finally {
+            connLock.unlock()
+        }
+    }
+
 }

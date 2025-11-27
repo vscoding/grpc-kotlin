@@ -18,7 +18,8 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":proto"))
+    implementation(project(":protos"))
+    implementation(project(":spring-boot-commons"))
     implementation(libs.grpc.client.spring.boot.starter)
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-aop")

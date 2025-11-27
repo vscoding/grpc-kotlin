@@ -1,4 +1,4 @@
-package io.intellij.kotlin.grpc.task
+package io.intellij.kotlin.grpc.commons.task
 
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.scheduling.TaskScheduler

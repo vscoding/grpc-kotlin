@@ -1,4 +1,4 @@
-package io.intellij.kotlin.grpc.task
+package io.intellij.kotlin.grpc.commons.task
 
 /**
  * CronTask

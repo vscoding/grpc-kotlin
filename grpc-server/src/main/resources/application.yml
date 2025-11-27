@@ -8,3 +8,8 @@ spring:
     active: dev
   application:
     name: grpc-server
+  task:
+    scheduling:
+      thread-name-prefix: grpc-server-task-
+      pool:
+        size: 2

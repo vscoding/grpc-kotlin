@@ -12,3 +12,8 @@ spring:
     active: dev
   application:
     name: grpc-client
+  task:
+    scheduling:
+      thread-name-prefix: grpc-client-task-
+      pool:
+        size: 2

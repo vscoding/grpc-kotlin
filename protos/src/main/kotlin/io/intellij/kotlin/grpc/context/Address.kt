@@ -58,4 +58,5 @@ class Address(val host: String, val port: Int) {
             return if (local) UNKNOWN_LOCAL.copy() else UNKNOWN_REMOTE.copy()
         }
     }
+
 }
