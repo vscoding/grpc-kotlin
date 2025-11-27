@@ -17,8 +17,11 @@ It showcases readiness guarding via AOP, connection monitoring with transport fi
 
 ## Project Structure
 
-- `proto`  
+- `protos`  
   Protobuf definitions and generated sources used by both client and server.
+
+- `spring-boot-commons`
+  Common Spring Boot configuration, utilities, exceptions, and cron task abstraction.
 
 - `grpc-server`  
   gRPC services, interceptors, transport filters, registry, tasks, and the server Spring Boot application.
