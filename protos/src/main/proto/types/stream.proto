@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_package = "io.intellij.kotlin.grpc.api.stream";
+option java_multiple_files = true;
+
+message StreamRequest{
+  string data = 1;
+}
+
+message StreamResponse{
+  string data = 1;
+}

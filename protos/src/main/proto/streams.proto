@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+
+option java_package = "io.intellij.kotlin.grpc.api";
+
+import "types/stream.proto";
+
+// Client-side streaming RPC
+service ClientStreamService{
+  rpc clientStreaming (stream StreamRequest) returns (StreamResponse);
+}
+
+// Server-side streaming RPC
+service ServerStreamService{
+  rpc serverStreaming (StreamRequest) returns (stream StreamResponse);
+}
+
+// Bidirectional streaming RPC
+service BidiStreamService{
+  rpc bidiStreaming (stream StreamRequest) returns (stream StreamResponse);
+}

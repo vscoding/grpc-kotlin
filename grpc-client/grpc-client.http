@@ -24,3 +24,12 @@ Accept: application/json
 
 ### heatbeat
 GET http://127.0.0.1:8080/heartBeat
+
+### stream cs2s
+GET http://127.0.0.1:8080/stream/cs2s
+
+### stream c2ss
+GET http://127.0.0.1:8080/stream/c2ss
+
+### stream cs2ss
+GET http://127.0.0.1:8080/stream/cs2ss

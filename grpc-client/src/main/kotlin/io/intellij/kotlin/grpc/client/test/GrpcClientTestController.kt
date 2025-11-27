@@ -7,6 +7,7 @@ import io.intellij.kotlin.grpc.client.context.ServerConn
 import io.intellij.kotlin.grpc.client.entities.GreetReq
 import io.intellij.kotlin.grpc.client.entities.GreetResp
 import io.intellij.kotlin.grpc.client.service.HeartBeatService
+import io.intellij.kotlin.grpc.client.service.StreamService
 import io.intellij.kotlin.grpc.client.service.TestService
 import io.intellij.kotlin.grpc.commons.task.CronTask
 import org.springframework.http.ResponseEntity
@@ -28,6 +29,7 @@ class GrpcClientTestController(
     private val grpcApplicationContext: GrpcApplicationContext,
     private val heartBeatService: HeartBeatService,
     private val testService: TestService,
+    private val streamService: StreamService,
     private val tasks: MutableList<CronTask>
 ) {
 
@@ -90,6 +92,21 @@ class GrpcClientTestController(
     @GetMapping("/heartBeat")
     fun heartBeat() {
         heartBeatService.doHeartBeat("heartBeat")
+    }
+
+    @GetMapping("/stream/cs2s")
+    fun cs2s() {
+        streamService.cs2s(10)
+    }
+
+    @GetMapping("/stream/c2ss")
+    fun c2ss() {
+        streamService.c2ss("client to server streaming data")
+    }
+
+    @GetMapping("/stream/cs2ss")
+    fun cs2ss() {
+        streamService.cs2ss(10)
     }
 
     @ControllerAdvice
