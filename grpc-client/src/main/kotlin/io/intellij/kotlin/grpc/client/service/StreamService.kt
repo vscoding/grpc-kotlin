@@ -9,6 +9,7 @@ import io.intellij.kotlin.grpc.api.stream.StreamResponse
 import io.intellij.kotlin.grpc.client.config.GrpcConfig
 import io.intellij.kotlin.grpc.client.config.getLogger
 import net.devh.boot.grpc.client.inject.GrpcClient
+import org.springframework.core.task.TaskExecutor
 import org.springframework.stereotype.Service
 import java.lang.Thread.sleep
 
@@ -20,18 +21,20 @@ import java.lang.Thread.sleep
 interface StreamService {
 
     @kotlin.jvm.Throws(Exception::class)
-    fun cs2s(count: Int)
+    fun clientStream(count: Int)
 
     @kotlin.jvm.Throws(Exception::class)
-    fun c2ss(data: String)
+    fun serverStream(data: String)
 
     @kotlin.jvm.Throws(Exception::class)
-    fun cs2ss(count: Int)
+    fun bidiStream(count: Int)
 
 }
 
 @Service
-class DefaultStreamService : StreamService {
+class DefaultStreamService(
+    private val taskExecutor: TaskExecutor
+) : StreamService {
 
     private val log = getLogger(DefaultStreamService::class.java)
 
@@ -49,7 +52,7 @@ class DefaultStreamService : StreamService {
      *
      * @param count the number of messages or elements to be sent through the client-to-server stream
      */
-    override fun cs2s(count: Int) {
+    override fun clientStream(count: Int) {
 
         val requestObserver: StreamObserver<StreamRequest> =
             clientStreamServiceStub.clientStreaming(object : StreamObserver<StreamResponse> {
@@ -77,7 +80,7 @@ class DefaultStreamService : StreamService {
 
     }
 
-    override fun c2ss(data: String) {
+    override fun serverStream(data: String) {
         val request = StreamRequest.newBuilder().setData(data).build()
         serverStreamServiceStub.serverStreaming(request, object : StreamObserver<StreamResponse> {
             private val dataList = mutableListOf<String>()
@@ -102,12 +105,12 @@ class DefaultStreamService : StreamService {
         })
     }
 
-    override fun cs2ss(count: Int) {
+    override fun bidiStream(count: Int) {
 
         bidiStreamServiceGrpcStub.bidiStreaming(object : StreamObserver<StreamResponse> {
             override fun onNext(response: StreamResponse) {
                 response.data.let { respData ->
-                    log.info("[Bidi Stream] Received response from server: {}", respData)
+                    taskExecutor.execute { log.info("[Bidi Stream] Received response from server: {}", respData) }
                 }
             }
 

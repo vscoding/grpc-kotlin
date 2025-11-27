@@ -94,19 +94,19 @@ class GrpcClientTestController(
         heartBeatService.doHeartBeat("heartBeat")
     }
 
-    @GetMapping("/stream/cs2s")
+    @GetMapping("/stream/client")
     fun cs2s() {
-        streamService.cs2s(10)
+        streamService.clientStream(10)
     }
 
-    @GetMapping("/stream/c2ss")
+    @GetMapping("/stream/server")
     fun c2ss() {
-        streamService.c2ss("client to server streaming data")
+        streamService.serverStream("client to server streaming data")
     }
 
-    @GetMapping("/stream/cs2ss")
+    @GetMapping("/stream/bidi")
     fun cs2ss() {
-        streamService.cs2ss(10)
+        streamService.bidiStream(10)
     }
 
     @ControllerAdvice
