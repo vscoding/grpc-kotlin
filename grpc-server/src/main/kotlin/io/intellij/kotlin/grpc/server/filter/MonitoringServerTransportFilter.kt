@@ -16,7 +16,10 @@ import java.net.InetSocketAddress
 class MonitoringServerTransportFilter(
     val registryService: RegistryService
 ) : ServerTransportFilter() {
-    private val log = getLogger(MonitoringServerTransportFilter::class.java)
+
+    companion object {
+        private val log = getLogger(MonitoringServerTransportFilter::class.java)
+    }
 
     override fun transportReady(transportAttrs: Attributes): Attributes? {
         log.info("transport ready: {}", transportAttrs)

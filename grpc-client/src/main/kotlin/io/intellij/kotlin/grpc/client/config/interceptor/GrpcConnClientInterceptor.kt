@@ -7,8 +7,8 @@ import io.grpc.ClientInterceptor
 import io.grpc.ForwardingClientCall.SimpleForwardingClientCall
 import io.grpc.Metadata
 import io.grpc.MethodDescriptor
-import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.client.context.RegistryService
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import java.util.Objects
 
 /**
@@ -19,7 +19,9 @@ import java.util.Objects
 class GrpcConnClientInterceptor(
     val registryService: RegistryService
 ) : ClientInterceptor {
-    private val log = getLogger(GrpcConnClientInterceptor::class.java)
+    companion object {
+        private val log = getLogger(GrpcConnClientInterceptor::class.java)
+    }
 
     override fun <ReqT, RespT> interceptCall(
         method: MethodDescriptor<ReqT?, RespT?>?,

@@ -1,8 +1,8 @@
 package io.intellij.kotlin.grpc.client.config.aop
 
-import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.client.context.GrpcApplicationContext
 import io.intellij.kotlin.grpc.client.expection.GrpcServerNotReadyException
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
@@ -19,7 +19,9 @@ import org.springframework.stereotype.Component
 class RequireGrpcServerReadyAspect(
     private val grpcApplicationContext: GrpcApplicationContext
 ) {
-    private val log = getLogger(RequireGrpcServerReadyAspect::class.java)
+    companion object {
+        private val log = getLogger(RequireGrpcServerReadyAspect::class.java)
+    }
 
     @Pointcut("execution(* io.intellij.kotlin.grpc.client..*.*(..)) && @annotation(io.intellij.kotlin.grpc.client.config.anno.RequireGrpcServerReady)")
     fun pointCut() {

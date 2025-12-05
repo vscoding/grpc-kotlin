@@ -15,7 +15,9 @@ import net.devh.boot.grpc.server.service.GrpcService
  */
 @GrpcService
 class MultiService : MultiServiceGrpc.MultiServiceImplBase() {
-    private val log = getLogger(MultiService::class.java)
+    companion object {
+        private val log = getLogger(MultiService::class.java)
+    }
 
     override fun sayHello(request: GreetRequest, responseObserver: StreamObserver<GreetResponse>) {
         val id: Int = request.id

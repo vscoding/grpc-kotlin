@@ -13,7 +13,9 @@ import net.devh.boot.grpc.server.service.GrpcService
  */
 @GrpcService
 class EchoService : HelloServiceGrpc.HelloServiceImplBase() {
-    private val log = getLogger(EchoService::class.java)
+    companion object {
+        private val log = getLogger(EchoService::class.java)
+    }
 
     override fun greeting(
         request: EchoProto.HelloRequest,

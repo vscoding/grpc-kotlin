@@ -16,7 +16,9 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class GrpcServerTransportFilterConfig {
-    private val log = getLogger(GrpcServerTransportFilterConfig::class.java)
+    companion object {
+        private val log = getLogger(GrpcServerTransportFilterConfig::class.java)
+    }
 
     @Bean
     fun monitoringServerTransportFilter(registryService: RegistryService): ServerTransportFilter {
@@ -35,10 +37,12 @@ class GrpcServerTransportFilterConfig {
      * @return 负责把过滤器加入 ServerBuilder 的 GrpcServerConfigurer
      */
     @Bean
-    fun monitoringServerTransportFilterConfigurer(monitoringServerTransportFilter: ServerTransportFilter): GrpcServerConfigurer {
+    fun monitoringServerTransportFilterConfigurer(
+        monitoringServerTransportFilter: ServerTransportFilter
+    ): GrpcServerConfigurer {
         log.info("GrpcServerConfigurer add MonitoringServerTransportFilter")
-        return GrpcServerConfigurer { builder: ServerBuilder<*>? ->
-            builder!!.addTransportFilter(
+        return GrpcServerConfigurer { builder: ServerBuilder<*> ->
+            builder.addTransportFilter(
                 monitoringServerTransportFilter
             )
         }

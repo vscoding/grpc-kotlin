@@ -36,7 +36,9 @@ class DefaultStreamService(
     private val taskExecutor: TaskExecutor
 ) : StreamService {
 
-    private val log = getLogger(DefaultStreamService::class.java)
+    companion object {
+        private val log = getLogger(StreamService::class.java)
+    }
 
     @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
     private lateinit var clientStreamServiceStub: ClientStreamServiceGrpc.ClientStreamServiceStub

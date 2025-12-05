@@ -3,8 +3,8 @@ package io.intellij.kotlin.grpc.client.config.filter
 import io.grpc.Attributes
 import io.grpc.ClientTransportFilter
 import io.grpc.Grpc
-import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.client.context.RegistryService
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.context.Address
 
 /**
@@ -15,7 +15,9 @@ import io.intellij.kotlin.grpc.context.Address
 class MonitoringClientTransportFilter(
     private val registryService: RegistryService
 ) : ClientTransportFilter() {
-    private val log = getLogger(MonitoringClientTransportFilter::class.java)
+    companion object {
+        private val log = getLogger(MonitoringClientTransportFilter::class.java)
+    }
 
     override fun transportReady(transportAttrs: Attributes): Attributes? {
         log.debug("transport ready: {}", transportAttrs)

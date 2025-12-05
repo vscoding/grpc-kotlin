@@ -14,7 +14,9 @@ import net.devh.boot.grpc.server.service.GrpcService
  */
 @GrpcService
 class BidiStreamService : BidiStreamServiceGrpc.BidiStreamServiceImplBase() {
-    private val log = getLogger(BidiStreamService::class.java)
+    companion object {
+        private val log = getLogger(BidiStreamService::class.java)
+    }
 
     override fun bidiStreaming(responseObserver: StreamObserver<StreamResponse>): StreamObserver<StreamRequest> {
 

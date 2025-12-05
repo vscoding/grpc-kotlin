@@ -14,7 +14,9 @@ import net.devh.boot.grpc.server.service.GrpcService
  */
 @GrpcService
 class ClientStreamService : ClientStreamServiceGrpc.ClientStreamServiceImplBase() {
-    private val log = getLogger(ClientStreamService::class.java)
+    companion object {
+        private val log = getLogger(ClientStreamService::class.java)
+    }
 
     override fun clientStreaming(
         responseObserver: StreamObserver<StreamResponse>

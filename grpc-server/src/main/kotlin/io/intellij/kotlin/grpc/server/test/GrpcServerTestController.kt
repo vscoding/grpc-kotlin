@@ -24,7 +24,9 @@ class GrpcServerTestController(
 
     @ControllerAdvice
     class GlobalExceptionHandler {
-        private val log = getLogger(GlobalExceptionHandler::class.java)
+        companion object {
+            private val log = getLogger(GlobalExceptionHandler::class.java)
+        }
 
         @ExceptionHandler(Exception::class)
         @ResponseBody

@@ -14,7 +14,11 @@ import java.util.concurrent.atomic.AtomicInteger
  * @author tech@intellij.io
  */
 class GrpcConnCounterInterceptor : ServerInterceptor {
-    private val log = getLogger(GrpcConnCounterInterceptor::class.java)
+
+    companion object {
+        private val log = getLogger(GrpcConnCounterInterceptor::class.java)
+    }
+
     private val connectionCount = AtomicInteger(0)
 
     override fun <ReqT, RespT> interceptCall(
@@ -50,4 +54,5 @@ class GrpcConnCounterInterceptor : ServerInterceptor {
             }
         }
     }
+
 }

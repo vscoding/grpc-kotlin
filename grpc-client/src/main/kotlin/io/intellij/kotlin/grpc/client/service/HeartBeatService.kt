@@ -3,8 +3,8 @@ package io.intellij.kotlin.grpc.client.service
 import io.intellij.kotlin.grpc.api.HeartBeatServiceGrpc
 import io.intellij.kotlin.grpc.api.common.Ping
 import io.intellij.kotlin.grpc.client.config.GrpcConfig
-import io.intellij.kotlin.grpc.commons.config.getLogger
 import io.intellij.kotlin.grpc.client.context.RegistryService
+import io.intellij.kotlin.grpc.commons.config.getLogger
 import net.devh.boot.grpc.client.inject.GrpcClient
 import org.springframework.stereotype.Service
 
@@ -21,7 +21,9 @@ interface HeartBeatService {
 class DefaultHeartBeatService(
     private val registryService: RegistryService,
 ) : HeartBeatService {
-    private val log = getLogger(DefaultHeartBeatService::class.java)
+    companion object {
+        private val log = getLogger(HeartBeatService::class.java)
+    }
 
     @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
     private lateinit var heartBeatServiceBlockingStub: HeartBeatServiceGrpc.HeartBeatServiceBlockingStub

@@ -16,7 +16,9 @@ class ClientConnPrintTask(
     private val taskScheduler: TaskScheduler,
     private val grpcServerApplicationContext: GrpcServerApplicationContext
 ) : AbstractCronTask() {
-    private val log = getLogger(ClientConnPrintTask::class.java)
+    companion object {
+        private val log = getLogger(ClientConnPrintTask::class.java)
+    }
 
     override fun startOnInitializing(): Boolean {
         return true

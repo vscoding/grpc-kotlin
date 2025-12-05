@@ -15,7 +15,9 @@ import java.lang.Thread.sleep
  */
 @GrpcService
 class ServerStreamService : ServerStreamServiceGrpc.ServerStreamServiceImplBase() {
-    private val log = getLogger(ServerStreamService::class.java)
+    companion object {
+        private val log = getLogger(ServerStreamService::class.java)
+    }
 
     override fun serverStreaming(
         request: StreamRequest,
