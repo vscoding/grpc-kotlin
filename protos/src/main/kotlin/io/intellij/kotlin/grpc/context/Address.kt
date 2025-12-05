@@ -9,27 +9,7 @@ import java.util.Objects
  *
  * @author tech@intellij.io
  */
-class Address(val host: String, val port: Int) {
-
-    override fun hashCode(): Int {
-        return Objects.hash(host, port)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return if (other is Address) {
-            this.host == other.host && this.port == other.port
-        } else {
-            false
-        }
-    }
-
-    fun copy(): Address {
-        return Address(host, port)
-    }
-
-    override fun toString(): String {
-        return "Address(host='$host', port=$port)"
-    }
+data class Address(val host: String, val port: Int) {
 
     companion object {
         private const val UNKNOWN_HOST = "unknown"
@@ -55,8 +35,25 @@ class Address(val host: String, val port: Int) {
         }
 
         private fun unknown(local: Boolean): Address {
+            // data class copy to prevent modification of the original object
             return if (local) UNKNOWN_LOCAL.copy() else UNKNOWN_REMOTE.copy()
         }
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(host, port)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Address) {
+            this.host == other.host && this.port == other.port
+        } else {
+            false
+        }
+    }
+
+    override fun toString(): String {
+        return "Address(host='$host', port=$port)"
     }
 
 }
