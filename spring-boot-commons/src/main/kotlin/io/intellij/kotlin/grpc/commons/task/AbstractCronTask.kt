@@ -17,9 +17,7 @@ abstract class AbstractCronTask : CronTask, InitializingBean {
 
     private var future: ScheduledFuture<*>? = null
 
-    override fun running(): Boolean {
-        return status.get()
-    }
+    override fun running(): Boolean = status.get()
 
     /**
      * Retrieves the TaskScheduler for scheduling tasks.
