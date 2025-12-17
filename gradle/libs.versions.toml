@@ -2,10 +2,11 @@
 freefair-lombok = "8.13.1"
 java = "21"
 kotlin = "2.2.21"
-spring-boot = "3.2.10"
-protoc = "3.24.3"
-grpc = "1.76.0"
-grp-spring-boot-starter = "3.1.0.RELEASE"
+spring-boot = "3.2.12"
+# protoc = "3.24.3"
+protoc = "4.33.2"
+grpc = "1.77.0"
+spring-boot-starter-grpc = "3.1.0.RELEASE"
 jackson = "3.0.1"
 
 [plugins]
@@ -20,13 +21,21 @@ spring-dependency-management = { id = "io.spring.dependency-management", version
 [libraries]
 lombok = { module = "org.projectlombok:lombok", version = "1.18.32" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version = "24.0.1" }
-grpc-protobuf = { module = "io.grpc:grpc-protobuf", version = "1.76.0" }
-grpc-services = { module = "io.grpc:grpc-services", version = "1.76.0" }
-grpc-stub = { module = "io.grpc:grpc-stub", version = "1.76.0" }
-grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded", version = "1.76.0" }
-grpc-spring-boot-starter = { module = "net.devh:grpc-spring-boot-starter", version.ref = "grp-spring-boot-starter" }
-grpc-client-spring-boot-starter = { module = "net.devh:grpc-client-spring-boot-starter", version.ref = "grp-spring-boot-starter" }
-grpc-server-spring-boot-starter = { module = "net.devh:grpc-server-spring-boot-starter", version.ref = "grp-spring-boot-starter" }
+
+grpc-bom = { module = "io.grpc:grpc-bom", version.ref = "grpc" }
+
+protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protoc" }
+protobuf-java-util = { module = "com.google.protobuf:protobuf-java-util", version.ref = "protoc" }
+
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
+grpc-services = { module = "io.grpc:grpc-services", version.ref = "grpc" }
+grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
+grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
+
+
+grpc-spring-boot-starter = { module = "net.devh:grpc-spring-boot-starter", version.ref = "spring-boot-starter-grpc" }
+grpc-client-spring-boot-starter = { module = "net.devh:grpc-client-spring-boot-starter", version.ref = "spring-boot-starter-grpc" }
+grpc-server-spring-boot-starter = { module = "net.devh:grpc-server-spring-boot-starter", version.ref = "spring-boot-starter-grpc" }
 
 jackson-core = { module = "tools.jackson.core:jackson-core", version.ref = "jackson" }
 jackson-databind = { module = "tools.jackson.core:jackson-databind", version.ref = "jackson" }

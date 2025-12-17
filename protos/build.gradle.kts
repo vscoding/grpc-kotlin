@@ -19,14 +19,24 @@ kotlin {
 }
 
 dependencies {
-    api(libs.grpc.protobuf)
-    api(libs.grpc.services)
-    api(libs.grpc.stub)
+    // Align all gRPC components via BOM
+    api(platform(libs.grpc.bom))
+    api("io.grpc:grpc-protobuf") {
+        exclude("com.google.protobuf", "protobuf-java") // Exclude protobuf-java to avoid version conflicts
+    }
+    api(libs.protobuf.java)     // Protobuf runtime must match protoc 4.x used for code generation
+
+    api("io.grpc:grpc-services")
+    api("io.grpc:grpc-stub")
+    api("io.grpc:grpc-netty-shaded")
+
+    // api(libs.grpc.protobuf)
+    // api(libs.grpc.services)
+    // api(libs.grpc.stub)
+    // api(libs.grpc.netty.shaded)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
-
-    api(libs.grpc.netty.shaded)
 
     api(libs.jackson.core)
     api(libs.jackson.databind)
