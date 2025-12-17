@@ -30,7 +30,7 @@ dependencies {
     api("io.grpc:grpc-stub")
     api("io.grpc:grpc-netty-shaded")
 
-    // api(libs.grpc.protobuf)
+    // api(libs.grpc.protobuf)W
     // api(libs.grpc.services)
     // api(libs.grpc.stub)
     // api(libs.grpc.netty.shaded)
@@ -51,7 +51,7 @@ dependencies {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:${libs.versions.protoc.get()}"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
     plugins {
         id("grpc") {

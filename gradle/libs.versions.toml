@@ -3,8 +3,8 @@ freefair-lombok = "8.13.1"
 java = "21"
 kotlin = "2.2.21"
 spring-boot = "3.2.12"
-# protoc = "3.24.3"
-protoc = "4.33.2"
+# protobuf = "3.24.3"
+protobuf = "4.33.2"
 grpc = "1.77.0"
 spring-boot-starter-grpc = "3.1.0.RELEASE"
 jackson = "3.0.1"
@@ -24,14 +24,13 @@ jetbrains-annotations = { module = "org.jetbrains:annotations", version = "24.0.
 
 grpc-bom = { module = "io.grpc:grpc-bom", version.ref = "grpc" }
 
-protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protoc" }
-protobuf-java-util = { module = "com.google.protobuf:protobuf-java-util", version.ref = "protoc" }
+protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf" }
+protobuf-java-util = { module = "com.google.protobuf:protobuf-java-util", version.ref = "protobuf" }
 
 grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
 grpc-services = { module = "io.grpc:grpc-services", version.ref = "grpc" }
 grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
 grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
-
 
 grpc-spring-boot-starter = { module = "net.devh:grpc-spring-boot-starter", version.ref = "spring-boot-starter-grpc" }
 grpc-client-spring-boot-starter = { module = "net.devh:grpc-client-spring-boot-starter", version.ref = "spring-boot-starter-grpc" }
