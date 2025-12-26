@@ -1,7 +1,7 @@
 [versions]
 freefair-lombok = "8.13.1"
 java = "21"
-kotlin = "2.2.21"
+kotlin = "2.3.0"
 spring-boot = "3.2.12"
 # protobuf = "3.24.3"
 protobuf = "4.33.2"
@@ -10,7 +10,6 @@ spring-boot-starter-grpc = "3.1.0.RELEASE"
 jackson = "3.0.1"
 
 [plugins]
-freefair-lombok = { id = "io.freefair.lombok", version.ref = "freefair-lombok" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 
