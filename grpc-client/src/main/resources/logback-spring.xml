@@ -1,13 +1,13 @@
 <configuration>
     <conversionRule conversionWord="applicationName"
-                    converterClass="org.springframework.boot.logging.logback.ApplicationNameConverter"/>
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+                    class="org.springframework.boot.logging.logback.ApplicationNameConverter"/>
+    <conversionRule conversionWord="clr" class="org.springframework.boot.logging.logback.ColorConverter"/>
     <conversionRule conversionWord="correlationId"
-                    converterClass="org.springframework.boot.logging.logback.CorrelationIdConverter"/>
+                    class="org.springframework.boot.logging.logback.CorrelationIdConverter"/>
     <conversionRule conversionWord="wex"
-                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+                    class="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
     <conversionRule conversionWord="wEx"
-                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+                    class="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
 
     <!--  log config start  -->
     <property name="LOG_DATEFORMAT_PATTERN" value="HH:mm:ss.SSS"/>
