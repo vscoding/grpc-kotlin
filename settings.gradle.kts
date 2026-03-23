@@ -12,6 +12,10 @@ dependencyResolutionManagement {
     }
 }
 
+plugins {
+    id("com.gradle.develocity") version ("4.3.2")
+}
+
 rootProject.name = "grpc-kotlin"
 
 include("protos")
