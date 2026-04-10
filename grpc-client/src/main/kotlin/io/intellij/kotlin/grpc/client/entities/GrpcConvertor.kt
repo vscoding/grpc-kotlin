@@ -6,5 +6,5 @@ package io.intellij.kotlin.grpc.client.entities
  * @author tech@intellij.io
  */
 interface GrpcConvertor<To> {
-    fun cast(): To
+  fun cast(): To
 }

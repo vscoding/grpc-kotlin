@@ -13,17 +13,17 @@ import net.devh.boot.grpc.server.service.GrpcService
  */
 @GrpcService
 class EchoService : HelloServiceGrpc.HelloServiceImplBase() {
-    companion object {
-        private val log = getLogger(EchoService::class.java)
-    }
+  companion object {
+    private val log = getLogger(EchoService::class.java)
+  }
 
-    override fun greeting(
-        request: EchoProto.HelloRequest,
-        responseObserver: StreamObserver<EchoProto.HelloResponse>
-    ) {
-        val name = request.name
-        log.debug("receive name is {}", name)
-        responseObserver.onNext(EchoProto.HelloResponse.newBuilder().setWelcome("Hello,$name").build())
-        responseObserver.onCompleted()
-    }
+  override fun greeting(
+    request: EchoProto.HelloRequest,
+    responseObserver: StreamObserver<EchoProto.HelloResponse>,
+  ) {
+    val name = request.name
+    log.debug("receive name is {}", name)
+    responseObserver.onNext(EchoProto.HelloResponse.newBuilder().setWelcome("Hello,$name").build())
+    responseObserver.onCompleted()
+  }
 }

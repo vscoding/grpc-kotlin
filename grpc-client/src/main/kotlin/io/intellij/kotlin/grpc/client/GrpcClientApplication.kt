@@ -12,5 +12,5 @@ import org.springframework.boot.runApplication
 class GrpcClientApplication
 
 fun main(args: Array<String>) {
-    runApplication<GrpcClientApplication>(*args)
+  runApplication<GrpcClientApplication>(*args)
 }

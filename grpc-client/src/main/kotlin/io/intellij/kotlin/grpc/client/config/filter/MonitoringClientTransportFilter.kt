@@ -13,23 +13,23 @@ import io.intellij.kotlin.grpc.context.Address
  * @author tech@intellij.io
  */
 class MonitoringClientTransportFilter(
-    private val registryService: RegistryService
+  private val registryService: RegistryService,
 ) : ClientTransportFilter() {
-    companion object {
-        private val log = getLogger(MonitoringClientTransportFilter::class.java)
-    }
+  companion object {
+    private val log = getLogger(MonitoringClientTransportFilter::class.java)
+  }
 
-    override fun transportReady(transportAttrs: Attributes): Attributes? {
-        log.debug("transport ready: {}", transportAttrs)
-        val remote: Address = Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false)
-        val local: Address = Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_LOCAL_ADDR)!!, true)
-        registryService.connect(remote.host, remote.port, local.port)
-        return super.transportReady(transportAttrs)
-    }
+  override fun transportReady(transportAttrs: Attributes): Attributes? {
+    log.debug("transport ready: {}", transportAttrs)
+    val remote: Address = Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false)
+    val local: Address = Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_LOCAL_ADDR)!!, true)
+    registryService.connect(remote.host, remote.port, local.port)
+    return super.transportReady(transportAttrs)
+  }
 
-    override fun transportTerminated(transportAttrs: Attributes?) {
-        log.debug("transport terminated: {}", transportAttrs)
-        registryService.disconnect()
-    }
+  override fun transportTerminated(transportAttrs: Attributes?) {
+    log.debug("transport terminated: {}", transportAttrs)
+    registryService.disconnect()
+  }
 
 }

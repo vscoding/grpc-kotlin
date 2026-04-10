@@ -11,8 +11,8 @@ import java.util.concurrent.atomic.AtomicReference
  */
 @Repository
 class ServerConnRegistry {
-    private val _serverReady = AtomicBoolean(false)
-    val serverReady: AtomicBoolean get() = _serverReady
-    private val _serverConn = AtomicReference(ServerConn.DEFAULT)
-    val serverConn: AtomicReference<ServerConn> get() = _serverConn
+  private val _serverReady = AtomicBoolean(false)
+  val serverReady: AtomicBoolean get() = _serverReady
+  private val _serverConn = AtomicReference(ServerConn.DEFAULT)
+  val serverConn: AtomicReference<ServerConn> get() = _serverConn
 }

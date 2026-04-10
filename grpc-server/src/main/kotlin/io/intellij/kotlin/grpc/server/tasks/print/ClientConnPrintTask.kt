@@ -13,30 +13,30 @@ import org.springframework.stereotype.Service
  */
 @Service
 class ClientConnPrintTask(
-    private val taskScheduler: TaskScheduler,
-    private val grpcServerApplicationContext: GrpcServerApplicationContext
+  private val taskScheduler: TaskScheduler,
+  private val grpcServerApplicationContext: GrpcServerApplicationContext,
 ) : AbstractCronTask() {
-    companion object {
-        private val log = getLogger(ClientConnPrintTask::class.java)
-    }
+  companion object {
+    private val log = getLogger(ClientConnPrintTask::class.java)
+  }
 
-    override fun startOnInitializing(): Boolean {
-        return true
-    }
+  override fun startOnInitializing(): Boolean {
+    return true
+  }
 
-    override fun getTaskScheduler(): TaskScheduler {
-        return this.taskScheduler
-    }
+  override fun getTaskScheduler(): TaskScheduler {
+    return this.taskScheduler
+  }
 
-    override fun getRunnable(): Runnable {
-        return Runnable {
-            val liveClients = grpcServerApplicationContext.liveClients()
-            if (liveClients.isEmpty()) {
-                log.debug("No Client's Connections")
-            } else {
-                log.debug("Live Clients:{}", liveClients)
-            }
-        }
+  override fun getRunnable(): Runnable {
+    return Runnable {
+      val liveClients = grpcServerApplicationContext.liveClients()
+      if (liveClients.isEmpty()) {
+        log.debug("No Client's Connections")
+      } else {
+        log.debug("Live Clients:{}", liveClients)
+      }
     }
+  }
 
 }

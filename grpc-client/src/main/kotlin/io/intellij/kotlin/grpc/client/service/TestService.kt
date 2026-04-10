@@ -17,36 +17,36 @@ import org.springframework.stereotype.Service
  */
 interface TestService {
 
-    fun test(name: String): String
+  fun test(name: String): String
 
-    /**
-     * Performs a greet operation using the given GreetReq object.
-     *
-     * @param req the GreetReq object containing the necessary parameters for the greet operation
-     * @return the GreetResp object containing the greeting
-     */
-    fun greet(req: GreetReq): GreetResp
+  /**
+   * Performs a greet operation using the given GreetReq object.
+   *
+   * @param req the GreetReq object containing the necessary parameters for the greet operation
+   * @return the GreetResp object containing the greeting
+   */
+  fun greet(req: GreetReq): GreetResp
 
-    @Service
-    class DefaultTestService : TestService {
+  @Service
+  class DefaultTestService : TestService {
 
-        @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
-        private lateinit var helloServiceBlockingStub: HelloServiceGrpc.HelloServiceBlockingStub
+    @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
+    private lateinit var helloServiceBlockingStub: HelloServiceGrpc.HelloServiceBlockingStub
 
-        @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
-        private lateinit var multiServiceBlockingStub: MultiServiceGrpc.MultiServiceBlockingStub
+    @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
+    private lateinit var multiServiceBlockingStub: MultiServiceGrpc.MultiServiceBlockingStub
 
-        override fun test(name: String): String {
-            val helloResponse: EchoProto.HelloResponse = helloServiceBlockingStub.greeting(
-                EchoProto.HelloRequest.newBuilder().setName(name).build()
-            )
-            return helloResponse.getWelcome()
-        }
-
-        override fun greet(req: GreetReq): GreetResp {
-            return GrpcConvertUtils.convert(
-                multiServiceBlockingStub.sayHello(req.cast())
-            )
-        }
+    override fun test(name: String): String {
+      val helloResponse: EchoProto.HelloResponse = helloServiceBlockingStub.greeting(
+        EchoProto.HelloRequest.newBuilder().setName(name).build(),
+      )
+      return helloResponse.getWelcome()
     }
+
+    override fun greet(req: GreetReq): GreetResp {
+      return GrpcConvertUtils.convert(
+        multiServiceBlockingStub.sayHello(req.cast()),
+      )
+    }
+  }
 }

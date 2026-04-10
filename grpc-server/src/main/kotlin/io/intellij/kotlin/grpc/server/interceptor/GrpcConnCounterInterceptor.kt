@@ -15,44 +15,44 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 class GrpcConnCounterInterceptor : ServerInterceptor {
 
-    companion object {
-        private val log = getLogger(GrpcConnCounterInterceptor::class.java)
-    }
+  companion object {
+    private val log = getLogger(GrpcConnCounterInterceptor::class.java)
+  }
 
-    private val connectionCount = AtomicInteger(0)
+  private val connectionCount = AtomicInteger(0)
 
-    override fun <ReqT, RespT> interceptCall(
-        call: ServerCall<ReqT, RespT>,
-        headers: Metadata?,
-        next: ServerCallHandler<ReqT, RespT>
-    ): ServerCall.Listener<ReqT> {
-        connectionCount.incrementAndGet()
+  override fun <ReqT, RespT> interceptCall(
+    call: ServerCall<ReqT, RespT>,
+    headers: Metadata?,
+    next: ServerCallHandler<ReqT, RespT>,
+  ): ServerCall.Listener<ReqT> {
+    connectionCount.incrementAndGet()
 
-        log.debug("Current Connection Count: {}", connectionCount.get())
-        val methodDescriptor = call.getMethodDescriptor()
+    log.debug("Current Connection Count: {}", connectionCount.get())
+    val methodDescriptor = call.getMethodDescriptor()
 
-        log.debug("MethodDescriptor | {}", methodDescriptor.fullMethodName)
+    log.debug("MethodDescriptor | {}", methodDescriptor.fullMethodName)
 
-        return object : SimpleForwardingServerCallListener<ReqT>(next.startCall(call, headers)) {
-            override fun onHalfClose() {
-                try {
-                    super.onHalfClose()
-                } finally {
-                    connectionCount.decrementAndGet()
-                    log.debug("Current Connection Count: {}", connectionCount.get())
-                }
-            }
-
-            override fun onCancel() {
-                log.debug("Connection cancelled by client.")
-                super.onCancel()
-            }
-
-            override fun onComplete() {
-                log.debug("Connection completed by client.")
-                super.onComplete()
-            }
+    return object : SimpleForwardingServerCallListener<ReqT>(next.startCall(call, headers)) {
+      override fun onHalfClose() {
+        try {
+          super.onHalfClose()
+        } finally {
+          connectionCount.decrementAndGet()
+          log.debug("Current Connection Count: {}", connectionCount.get())
         }
+      }
+
+      override fun onCancel() {
+        log.debug("Connection cancelled by client.")
+        super.onCancel()
+      }
+
+      override fun onComplete() {
+        log.debug("Connection completed by client.")
+        super.onComplete()
+      }
     }
+  }
 
 }

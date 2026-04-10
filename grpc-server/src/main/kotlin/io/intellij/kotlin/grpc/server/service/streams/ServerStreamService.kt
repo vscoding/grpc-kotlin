@@ -15,25 +15,25 @@ import java.lang.Thread.sleep
  */
 @GrpcService
 class ServerStreamService : ServerStreamServiceGrpc.ServerStreamServiceImplBase() {
-    companion object {
-        private val log = getLogger(ServerStreamService::class.java)
-    }
+  companion object {
+    private val log = getLogger(ServerStreamService::class.java)
+  }
 
-    override fun serverStreaming(
-        request: StreamRequest,
-        responseObserver: StreamObserver<StreamResponse>
-    ) {
-        val requestData = request.data
-        log.info("[Server Stream] receive data: {}", requestData)
-        for (i in 1..10) {
-            responseObserver.onNext(
-                StreamResponse.newBuilder().setData(
-                    "[Server Stream] response data: $requestData-$i"
-                ).build()
-            )
-            sleep(100)
-        }
-        responseObserver.onCompleted()
+  override fun serverStreaming(
+    request: StreamRequest,
+    responseObserver: StreamObserver<StreamResponse>,
+  ) {
+    val requestData = request.data
+    log.info("[Server Stream] receive data: {}", requestData)
+    for (i in 1..10) {
+      responseObserver.onNext(
+        StreamResponse.newBuilder().setData(
+          "[Server Stream] response data: $requestData-$i",
+        ).build(),
+      )
+      sleep(100)
     }
+    responseObserver.onCompleted()
+  }
 
 }

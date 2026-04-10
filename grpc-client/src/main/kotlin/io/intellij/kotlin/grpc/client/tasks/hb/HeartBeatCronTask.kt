@@ -13,23 +13,23 @@ import java.util.UUID
  */
 @Service
 class HeartBeatCronTask(
-    private val taskScheduler: TaskScheduler,
-    private val heartBeatService: HeartBeatService
+  private val taskScheduler: TaskScheduler,
+  private val heartBeatService: HeartBeatService,
 
-) : AbstractCronTask() {
-    override fun cron(): String {
-        return "*/3 * * * * ?"
-    }
+  ) : AbstractCronTask() {
+  override fun cron(): String {
+    return "*/3 * * * * ?"
+  }
 
-    override fun startOnInitializing(): Boolean {
-        return true
-    }
+  override fun startOnInitializing(): Boolean {
+    return true
+  }
 
-    override fun getTaskScheduler(): TaskScheduler {
-        return this.taskScheduler
-    }
+  override fun getTaskScheduler(): TaskScheduler {
+    return this.taskScheduler
+  }
 
-    override fun getRunnable(): Runnable {
-        return Runnable { heartBeatService.doHeartBeat(UUID.randomUUID().toString()) }
-    }
+  override fun getRunnable(): Runnable {
+    return Runnable { heartBeatService.doHeartBeat(UUID.randomUUID().toString()) }
+  }
 }

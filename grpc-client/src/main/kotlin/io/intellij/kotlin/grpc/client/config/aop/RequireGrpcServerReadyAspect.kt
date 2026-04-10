@@ -17,28 +17,28 @@ import org.springframework.stereotype.Component
 @Component
 @Aspect
 class RequireGrpcServerReadyAspect(
-    private val grpcApplicationContext: GrpcApplicationContext
+  private val grpcApplicationContext: GrpcApplicationContext,
 ) {
-    companion object {
-        private val log = getLogger(RequireGrpcServerReadyAspect::class.java)
-    }
+  companion object {
+    private val log = getLogger(RequireGrpcServerReadyAspect::class.java)
+  }
 
-    @Pointcut("execution(* io.intellij.kotlin.grpc.client..*.*(..)) && @annotation(io.intellij.kotlin.grpc.client.config.anno.RequireGrpcServerReady)")
-    fun pointCut() {
-    }
+  @Pointcut("execution(* io.intellij.kotlin.grpc.client..*.*(..)) && @annotation(io.intellij.kotlin.grpc.client.config.anno.RequireGrpcServerReady)")
+  fun pointCut() {
+  }
 
-    @Around("pointCut()")
-    @Throws(Throwable::class)
-    fun around(joinPoint: ProceedingJoinPoint): Any {
-        if (grpcApplicationContext.serverReady()) {
-            return joinPoint.proceed()
-        } else {
-            log.error(
-                "Grpc Server Not Ready;AroundAdvice on {}#{}",
-                joinPoint.target.javaClass.simpleName,
-                joinPoint.signature.name
-            )
-            throw GrpcServerNotReadyException.create()
-        }
+  @Around("pointCut()")
+  @Throws(Throwable::class)
+  fun around(joinPoint: ProceedingJoinPoint): Any {
+    if (grpcApplicationContext.serverReady()) {
+      return joinPoint.proceed()
+    } else {
+      log.error(
+        "Grpc Server Not Ready;AroundAdvice on {}#{}",
+        joinPoint.target.javaClass.simpleName,
+        joinPoint.signature.name,
+      )
+      throw GrpcServerNotReadyException.create()
     }
+  }
 }

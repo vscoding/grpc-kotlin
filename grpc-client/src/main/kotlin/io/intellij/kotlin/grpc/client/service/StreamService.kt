@@ -20,118 +20,125 @@ import java.lang.Thread.sleep
  */
 interface StreamService {
 
-    @kotlin.jvm.Throws(Exception::class)
-    fun clientStream(count: Int)
+  @kotlin.jvm.Throws(Exception::class)
+  fun clientStream(count: Int)
 
-    @kotlin.jvm.Throws(Exception::class)
-    fun serverStream(data: String)
+  @kotlin.jvm.Throws(Exception::class)
+  fun serverStream(data: String)
 
-    @kotlin.jvm.Throws(Exception::class)
-    fun bidiStream(count: Int)
+  @kotlin.jvm.Throws(Exception::class)
+  fun bidiStream(count: Int)
 
 }
 
 @Service
 class DefaultStreamService(
-    private val taskExecutor: TaskExecutor
+  private val taskExecutor: TaskExecutor,
 ) : StreamService {
 
-    companion object {
-        private val log = getLogger(StreamService::class.java)
+  companion object {
+    private val log = getLogger(StreamService::class.java)
+  }
+
+  @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
+  private lateinit var clientStreamServiceStub: ClientStreamServiceGrpc.ClientStreamServiceStub
+
+  @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
+  private lateinit var serverStreamServiceStub: ServerStreamServiceGrpc.ServerStreamServiceStub
+
+  @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
+  private lateinit var bidiStreamServiceGrpcStub: BidiStreamServiceGrpc.BidiStreamServiceStub
+
+  /**
+   * Handles communication or operations between client and server using a streaming service.
+   *
+   * @param count the number of messages or elements to be sent through the client-to-server stream
+   */
+  override fun clientStream(count: Int) {
+
+    val requestObserver: StreamObserver<StreamRequest> =
+      clientStreamServiceStub.clientStreaming(
+        object : StreamObserver<StreamResponse> {
+          override fun onNext(response: StreamResponse) {
+            log.info("[Client Stream] Received response from server: {}", response.data)
+          }
+
+          override fun onError(t: Throwable) {
+            log.error("Error occurred during client streaming", t)
+          }
+
+          override fun onCompleted() {
+            log.info("[Client Stream] completed")
+          }
+        },
+      )
+
+    for (i in 1..count) {
+      requestObserver.onNext(
+        StreamRequest.newBuilder().setData("[Client Stream] Request Data: $i").build(),
+      )
+      sleep(100)
     }
 
-    @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
-    private lateinit var clientStreamServiceStub: ClientStreamServiceGrpc.ClientStreamServiceStub
+    requestObserver.onCompleted()
 
-    @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
-    private lateinit var serverStreamServiceStub: ServerStreamServiceGrpc.ServerStreamServiceStub
+  }
 
-    @GrpcClient(GrpcConfig.GRPC_SERVER_INSTANCE)
-    private lateinit var bidiStreamServiceGrpcStub: BidiStreamServiceGrpc.BidiStreamServiceStub
+  override fun serverStream(data: String) {
+    val request = StreamRequest.newBuilder().setData(data).build()
+    serverStreamServiceStub.serverStreaming(
+      request,
+      object : StreamObserver<StreamResponse> {
+        private val dataList = mutableListOf<String>()
 
-    /**
-     * Handles communication or operations between client and server using a streaming service.
-     *
-     * @param count the number of messages or elements to be sent through the client-to-server stream
-     */
-    override fun clientStream(count: Int) {
-
-        val requestObserver: StreamObserver<StreamRequest> =
-            clientStreamServiceStub.clientStreaming(object : StreamObserver<StreamResponse> {
-                override fun onNext(response: StreamResponse) {
-                    log.info("[Client Stream] Received response from server: {}", response.data)
-                }
-
-                override fun onError(t: Throwable) {
-                    log.error("Error occurred during client streaming", t)
-                }
-
-                override fun onCompleted() {
-                    log.info("[Client Stream] completed")
-                }
-            })
-
-        for (i in 1..count) {
-            requestObserver.onNext(
-                StreamRequest.newBuilder().setData("[Client Stream] Request Data: $i").build()
-            )
-            sleep(100)
+        override fun onNext(response: StreamResponse) {
+          response.data.also { respData ->
+            log.info("[Server Stream] Received response from server: {}", respData)
+            dataList.add(respData)
+          }
         }
 
-        requestObserver.onCompleted()
-
-    }
-
-    override fun serverStream(data: String) {
-        val request = StreamRequest.newBuilder().setData(data).build()
-        serverStreamServiceStub.serverStreaming(request, object : StreamObserver<StreamResponse> {
-            private val dataList = mutableListOf<String>()
-
-            override fun onNext(response: StreamResponse) {
-                response.data.also { respData ->
-                    log.info("[Server Stream] Received response from server: {}", respData)
-                    dataList.add(respData)
-                }
-            }
-
-            override fun onError(t: Throwable) {
-                log.error("Error occurred during server streaming", t)
-            }
-
-            override fun onCompleted() {
-                log.info("[Server Stream] completed")
-                dataList.forEach { dataItem ->
-                    log.info("Collected data item: {}", dataItem)
-                }
-            }
-        })
-    }
-
-    override fun bidiStream(count: Int) {
-
-        bidiStreamServiceGrpcStub.bidiStreaming(object : StreamObserver<StreamResponse> {
-            override fun onNext(response: StreamResponse) {
-                response.data.also { respData ->
-                    taskExecutor.execute { log.info("[Bidi Stream] Received response from server: {}", respData) }
-                }
-            }
-
-            override fun onError(t: Throwable) {
-                log.error("Error occurred during bidi streaming", t)
-            }
-
-            override fun onCompleted() {
-                log.info("[Bidi Stream] completed")
-            }
-
-        }).also { requestObserver ->
-            for (i in 1..count) {
-                requestObserver.onNext(StreamRequest.newBuilder().setData("[Bidi Stream] Request Data: $i").build())
-                sleep(100)
-            }
-            requestObserver.onCompleted()
+        override fun onError(t: Throwable) {
+          log.error("Error occurred during server streaming", t)
         }
 
+        override fun onCompleted() {
+          log.info("[Server Stream] completed")
+          dataList.forEach { dataItem ->
+            log.info("Collected data item: {}", dataItem)
+          }
+        }
+      },
+    )
+  }
+
+  override fun bidiStream(count: Int) {
+
+    bidiStreamServiceGrpcStub.bidiStreaming(
+      object : StreamObserver<StreamResponse> {
+        override fun onNext(response: StreamResponse) {
+          response.data.also { respData ->
+            taskExecutor.execute { log.info("[Bidi Stream] Received response from server: {}", respData) }
+          }
+        }
+
+        override fun onError(t: Throwable) {
+          log.error("Error occurred during bidi streaming", t)
+        }
+
+        override fun onCompleted() {
+          log.info("[Bidi Stream] completed")
+        }
+
+      },
+    ).also { requestObserver ->
+      for (i in 1..count) {
+        requestObserver.onNext(StreamRequest.newBuilder().setData("[Bidi Stream] Request Data: $i").build())
+        sleep(100)
+      }
+      requestObserver.onCompleted()
     }
+
+  }
 
 }

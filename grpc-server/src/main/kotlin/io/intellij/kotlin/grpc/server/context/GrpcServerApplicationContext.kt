@@ -13,51 +13,51 @@ import org.springframework.stereotype.Component
  * @author tech@intellij.io
  */
 interface GrpcServerApplicationContext : ApplicationContextAware {
-    /**
-     * Retrieves the Spring application context associated with the GrpcServerApplicationContext.
-     *
-     * @return The Spring application context.
-     */
-    fun getSpringApplicationContext(): ApplicationContext?
+  /**
+   * Retrieves the Spring application context associated with the GrpcServerApplicationContext.
+   *
+   * @return The Spring application context.
+   */
+  fun getSpringApplicationContext(): ApplicationContext?
 
-    /**
-     * Retrieves the list of connected clients.
-     *
-     * @return A List of ClientConn objects representing the connected clients.
-     */
-    fun liveClients(): List<ClientConn>
+  /**
+   * Retrieves the list of connected clients.
+   *
+   * @return A List of ClientConn objects representing the connected clients.
+   */
+  fun liveClients(): List<ClientConn>
 
-    /**
-     * Retrieves the list of historical clients.
-     *
-     * @return A List of ClientConn objects representing the historical clients.
-     */
-    fun historyClients(): List<ClientConn>
+  /**
+   * Retrieves the list of historical clients.
+   *
+   * @return A List of ClientConn objects representing the historical clients.
+   */
+  fun historyClients(): List<ClientConn>
 }
 
 
 @Component
 class DefaultGrpcServerApplicationContext(
-    private val registryService: RegistryService
+  private val registryService: RegistryService,
 ) : GrpcServerApplicationContext {
-    private val log = getLogger(DefaultGrpcServerApplicationContext::class.java)
-    private var applicationContext: ApplicationContext? = null
+  private val log = getLogger(DefaultGrpcServerApplicationContext::class.java)
+  private var applicationContext: ApplicationContext? = null
 
-    @Throws(BeansException::class)
-    override fun setApplicationContext(@NonNull applicationContext: ApplicationContext) {
-        log.info("ApplicationContext Aware")
-        this.applicationContext = applicationContext
-    }
+  @Throws(BeansException::class)
+  override fun setApplicationContext(@NonNull applicationContext: ApplicationContext) {
+    log.info("ApplicationContext Aware")
+    this.applicationContext = applicationContext
+  }
 
-    override fun getSpringApplicationContext(): ApplicationContext? {
-        return this.applicationContext
-    }
+  override fun getSpringApplicationContext(): ApplicationContext? {
+    return this.applicationContext
+  }
 
-    override fun liveClients(): List<ClientConn> {
-        return registryService.getLiveClients()
-    }
+  override fun liveClients(): List<ClientConn> {
+    return registryService.getLiveClients()
+  }
 
-    override fun historyClients(): List<ClientConn> {
-        return registryService.getHistoryClients()
-    }
+  override fun historyClients(): List<ClientConn> {
+    return registryService.getHistoryClients()
+  }
 }

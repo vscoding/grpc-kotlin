@@ -15,21 +15,21 @@ import net.devh.boot.grpc.server.service.GrpcService
  */
 @GrpcService
 class MultiService : MultiServiceGrpc.MultiServiceImplBase() {
-    companion object {
-        private val log = getLogger(MultiService::class.java)
-    }
+  companion object {
+    private val log = getLogger(MultiService::class.java)
+  }
 
-    override fun sayHello(request: GreetRequest, responseObserver: StreamObserver<GreetResponse>) {
-        val id: Int = request.id
-        val name: String = request.getName()
-        val gender: Gender = request.getGender()
-        val emails: List<String> = request.emailsList.toList()
-        log.info("id: {}, name: {}, gender: {}, emails: {}", id, name, gender, emails)
+  override fun sayHello(request: GreetRequest, responseObserver: StreamObserver<GreetResponse>) {
+    val id: Int = request.id
+    val name: String = request.getName()
+    val gender: Gender = request.getGender()
+    val emails: List<String> = request.emailsList.toList()
+    log.info("id: {}, name: {}, gender: {}, emails: {}", id, name, gender, emails)
 
-        responseObserver.onNext(
-            GreetResponse.newBuilder().setMsg("Hello,$name").build()
-        )
+    responseObserver.onNext(
+      GreetResponse.newBuilder().setMsg("Hello,$name").build(),
+    )
 
-        responseObserver.onCompleted()
-    }
+    responseObserver.onCompleted()
+  }
 }

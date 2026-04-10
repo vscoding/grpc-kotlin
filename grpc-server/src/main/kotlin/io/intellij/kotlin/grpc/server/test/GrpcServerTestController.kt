@@ -19,36 +19,36 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping
 class GrpcServerTestController(
-    val grpcServerApplicationContext: GrpcServerApplicationContext
+  val grpcServerApplicationContext: GrpcServerApplicationContext,
 ) {
 
-    @ControllerAdvice
-    class GlobalExceptionHandler {
-        companion object {
-            private val log = getLogger(GlobalExceptionHandler::class.java)
-        }
-
-        @ExceptionHandler(Exception::class)
-        @ResponseBody
-        fun handleException(e: Exception): ResponseEntity<MutableMap<String?, Any?>?> {
-            log.error("handle exception {}", e.message)
-            return ResponseEntity.ok(
-                mutableMapOf(
-                    "code" to 500,
-                    "message" to e.message
-                )
-            )
-        }
+  @ControllerAdvice
+  class GlobalExceptionHandler {
+    companion object {
+      private val log = getLogger(GlobalExceptionHandler::class.java)
     }
 
-    @GetMapping("/liveClients")
-    fun liveClients(): List<ClientConn> {
-        return grpcServerApplicationContext.liveClients()
+    @ExceptionHandler(Exception::class)
+    @ResponseBody
+    fun handleException(e: Exception): ResponseEntity<MutableMap<String?, Any?>?> {
+      log.error("handle exception {}", e.message)
+      return ResponseEntity.ok(
+        mutableMapOf(
+          "code" to 500,
+          "message" to e.message,
+        ),
+      )
     }
+  }
 
-    @GetMapping("/historyClients")
-    fun historyClients(): List<ClientConn> {
-        return grpcServerApplicationContext.historyClients()
-    }
+  @GetMapping("/liveClients")
+  fun liveClients(): List<ClientConn> {
+    return grpcServerApplicationContext.liveClients()
+  }
+
+  @GetMapping("/historyClients")
+  fun historyClients(): List<ClientConn> {
+    return grpcServerApplicationContext.historyClients()
+  }
 
 }

@@ -12,12 +12,12 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 class ClientConnRegistry {
-    private val _live: MutableMap<Address, ClientConn> = Maps.newConcurrentMap()
-    val live: MutableMap<Address, ClientConn> get() = _live
+  private val _live: MutableMap<Address, ClientConn> = Maps.newConcurrentMap()
+  val live: MutableMap<Address, ClientConn> get() = _live
 
-    private val _history: MutableList<ClientConn> = Lists.newCopyOnWriteArrayList()
-    val history: MutableList<ClientConn> get() = _history
+  private val _history: MutableList<ClientConn> = Lists.newCopyOnWriteArrayList()
+  val history: MutableList<ClientConn> get() = _history
 
-    fun clearHistoryClients() = _history.clear()
+  fun clearHistoryClients() = _history.clear()
 
 }

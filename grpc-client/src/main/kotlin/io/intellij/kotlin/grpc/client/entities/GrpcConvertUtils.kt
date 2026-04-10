@@ -8,7 +8,7 @@ import io.intellij.kotlin.grpc.multi.GreetResponse
  * @author tech@intellij.io
  */
 object GrpcConvertUtils {
-    fun convert(req: GreetResponse): GreetResp {
-        return GreetResp(req.msg)
-    }
+  fun convert(req: GreetResponse): GreetResp {
+    return GreetResp(req.msg)
+  }
 }

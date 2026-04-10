@@ -15,9 +15,9 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @Configuration
 class AsyncConfiguration {
 
-    @Bean
-    fun taskExecutor(): TaskExecutor {
-        return VirtualThreadTaskExecutor("v-async-")
-    }
+  @Bean
+  fun taskExecutor(): TaskExecutor {
+    return VirtualThreadTaskExecutor("v-async-")
+  }
 
 }

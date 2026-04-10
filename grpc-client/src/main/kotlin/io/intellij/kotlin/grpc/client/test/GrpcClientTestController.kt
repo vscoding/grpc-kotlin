@@ -27,98 +27,98 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 class GrpcClientTestController(
-    private val grpcApplicationContext: GrpcApplicationContext,
-    private val heartBeatService: HeartBeatService,
-    private val testService: TestService,
-    private val streamService: StreamService,
-    private val tasks: MutableList<CronTask>
+  private val grpcApplicationContext: GrpcApplicationContext,
+  private val heartBeatService: HeartBeatService,
+  private val testService: TestService,
+  private val streamService: StreamService,
+  private val tasks: MutableList<CronTask>,
 ) {
 
-    @RequireGrpcServerReady
-    @GetMapping("/")
-    fun grpc(): MutableMap<String, Any> {
-        val grpc: String = testService.test(grpcApplicationContext.applicationName)
-        return mutableMapOf(
-            "test" to grpc,
-            "serverReady" to serverReady(),
-            "serverConn" to serverConn()
-        )
+  @RequireGrpcServerReady
+  @GetMapping("/")
+  fun grpc(): MutableMap<String, Any> {
+    val grpc: String = testService.test(grpcApplicationContext.applicationName)
+    return mutableMapOf(
+      "test" to grpc,
+      "serverReady" to serverReady(),
+      "serverConn" to serverConn(),
+    )
+  }
+
+  @PostMapping("/greet")
+  fun greet(@RequestBody req: GreetReq): GreetResp {
+    return testService.greet(req)
+  }
+
+  @GetMapping("/serverReady")
+  fun serverReady(): Boolean {
+    return grpcApplicationContext.serverReady()
+  }
+
+  @GetMapping("/serverConn")
+  fun serverConn(): ServerConn {
+    return grpcApplicationContext.serverConn()
+  }
+
+
+  @GetMapping("/startTasks")
+  fun startTasks(): MutableList<TaskStatus> {
+    tasks.forEach { it.start() }
+    return taskStatus()
+  }
+
+  @GetMapping("/stopTasks")
+  fun stopTasks(): MutableList<TaskStatus> {
+    tasks.forEach { it.stop() }
+    return taskStatus()
+  }
+
+  @GetMapping("/tasks")
+  fun taskStatus(): MutableList<TaskStatus> {
+    return tasks.map { task ->
+      TaskStatus(
+        className = task::class.java.name,
+        cron = task.cron(),
+        running = task.running(),
+      )
+    }.toMutableList()
+  }
+
+  @GetMapping("/heartBeat")
+  fun heartBeat() {
+    heartBeatService.doHeartBeat("heartBeat")
+  }
+
+  @GetMapping("/stream/client")
+  fun cs2s() {
+    streamService.clientStream(10)
+  }
+
+  @GetMapping("/stream/server")
+  fun c2ss() {
+    streamService.serverStream("client to server streaming data")
+  }
+
+  @GetMapping("/stream/bidi")
+  fun cs2ss() {
+    streamService.bidiStream(10)
+  }
+
+  @ControllerAdvice
+  class GlobalExceptionHandler {
+    private val log = getLogger(GlobalExceptionHandler::class.java)
+
+    @ExceptionHandler(Exception::class)
+    @ResponseBody
+    fun handleException(e: Exception): ResponseEntity<MutableMap<String?, Any?>?> {
+      log.error("handle exception {}", e.message)
+      return ResponseEntity.ok(
+        mutableMapOf(
+          "code" to 500,
+          "message" to e.message,
+        ),
+      )
     }
-
-    @PostMapping("/greet")
-    fun greet(@RequestBody req: GreetReq): GreetResp {
-        return testService.greet(req)
-    }
-
-    @GetMapping("/serverReady")
-    fun serverReady(): Boolean {
-        return grpcApplicationContext.serverReady()
-    }
-
-    @GetMapping("/serverConn")
-    fun serverConn(): ServerConn {
-        return grpcApplicationContext.serverConn()
-    }
-
-
-    @GetMapping("/startTasks")
-    fun startTasks(): MutableList<TaskStatus> {
-        tasks.forEach { it.start() }
-        return taskStatus()
-    }
-
-    @GetMapping("/stopTasks")
-    fun stopTasks(): MutableList<TaskStatus> {
-        tasks.forEach { it.stop() }
-        return taskStatus()
-    }
-
-    @GetMapping("/tasks")
-    fun taskStatus(): MutableList<TaskStatus> {
-        return tasks.map { task ->
-            TaskStatus(
-                className = task::class.java.name,
-                cron = task.cron(),
-                running = task.running()
-            )
-        }.toMutableList()
-    }
-
-    @GetMapping("/heartBeat")
-    fun heartBeat() {
-        heartBeatService.doHeartBeat("heartBeat")
-    }
-
-    @GetMapping("/stream/client")
-    fun cs2s() {
-        streamService.clientStream(10)
-    }
-
-    @GetMapping("/stream/server")
-    fun c2ss() {
-        streamService.serverStream("client to server streaming data")
-    }
-
-    @GetMapping("/stream/bidi")
-    fun cs2ss() {
-        streamService.bidiStream(10)
-    }
-
-    @ControllerAdvice
-    class GlobalExceptionHandler {
-        private val log = getLogger(GlobalExceptionHandler::class.java)
-
-        @ExceptionHandler(Exception::class)
-        @ResponseBody
-        fun handleException(e: Exception): ResponseEntity<MutableMap<String?, Any?>?> {
-            log.error("handle exception {}", e.message)
-            return ResponseEntity.ok(
-                mutableMapOf(
-                    "code" to 500,
-                    "message" to e.message
-                )
-            )
-        }
-    }
+  }
 
 }

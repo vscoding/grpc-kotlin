@@ -14,34 +14,34 @@ import net.devh.boot.grpc.server.service.GrpcService
  */
 @GrpcService
 class BidiStreamService : BidiStreamServiceGrpc.BidiStreamServiceImplBase() {
-    companion object {
-        private val log = getLogger(BidiStreamService::class.java)
-    }
+  companion object {
+    private val log = getLogger(BidiStreamService::class.java)
+  }
 
-    override fun bidiStreaming(responseObserver: StreamObserver<StreamResponse>): StreamObserver<StreamRequest> {
+  override fun bidiStreaming(responseObserver: StreamObserver<StreamResponse>): StreamObserver<StreamRequest> {
 
-        return object : StreamObserver<StreamRequest> {
+    return object : StreamObserver<StreamRequest> {
 
-            override fun onNext(request: StreamRequest) {
-                // echo back
-                request.data.also {
-                    log.info("[Bidi Stream]receive data: {}", it)
-                    StreamResponse.newBuilder().setData("[Bidi Stream] Response data: $it").build()
-                        .also { response ->
-                            responseObserver.onNext(response)
-                        }
-                }
-            }
-
-            override fun onError(t: Throwable) {
-                log.error("Error occurred during bidi streaming", t)
-            }
-
-            override fun onCompleted() {
-                log.info("[Bidi Stream] receive completed")
-                responseObserver.onCompleted()
+      override fun onNext(request: StreamRequest) {
+        // echo back
+        request.data.also {
+          log.info("[Bidi Stream]receive data: {}", it)
+          StreamResponse.newBuilder().setData("[Bidi Stream] Response data: $it").build()
+            .also { response ->
+              responseObserver.onNext(response)
             }
         }
+      }
+
+      override fun onError(t: Throwable) {
+        log.error("Error occurred during bidi streaming", t)
+      }
+
+      override fun onCompleted() {
+        log.info("[Bidi Stream] receive completed")
+        responseObserver.onCompleted()
+      }
     }
+  }
 
 }

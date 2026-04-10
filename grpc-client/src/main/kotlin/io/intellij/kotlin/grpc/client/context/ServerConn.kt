@@ -8,15 +8,15 @@ import io.intellij.kotlin.grpc.context.Address
  * @author tech@intellij.io
  */
 data class ServerConn(
-    val connected: Boolean = false,
-    val remote: Address,
-    val local: Address
+  val connected: Boolean = false,
+  val remote: Address,
+  val local: Address,
 ) {
-    companion object {
-        val DEFAULT: ServerConn = ServerConn(false, Address.UNKNOWN_REMOTE, Address.UNKNOWN_LOCAL)
+  companion object {
+    val DEFAULT: ServerConn = ServerConn(false, Address.UNKNOWN_REMOTE, Address.UNKNOWN_LOCAL)
 
-        fun create(remoteHost: String, remotePort: Int, localPort: Int): ServerConn {
-            return ServerConn(true, Address(remoteHost, remotePort), Address(Address.LOCAL_HOST, localPort))
-        }
+    fun create(remoteHost: String, remotePort: Int, localPort: Int): ServerConn {
+      return ServerConn(true, Address(remoteHost, remotePort), Address(Address.LOCAL_HOST, localPort))
     }
+  }
 }

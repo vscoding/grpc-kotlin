@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class GrpcServerInterceptorConfig {
 
-    @GrpcGlobalServerInterceptor
-    fun connectionCountInterceptor(): ServerInterceptor {
-        return GrpcConnCounterInterceptor()
-    }
+  @GrpcGlobalServerInterceptor
+  fun connectionCountInterceptor(): ServerInterceptor {
+    return GrpcConnCounterInterceptor()
+  }
 
 }

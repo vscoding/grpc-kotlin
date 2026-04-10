@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service
  */
 @Service
 class EmptyCronTask : AbstractCronTask() {
-    override fun getTaskScheduler(): TaskScheduler? {
-        return null
-    }
+  override fun getTaskScheduler(): TaskScheduler? {
+    return null
+  }
 
-    override fun getRunnable(): Runnable? {
-        return null
-    }
+  override fun getRunnable(): Runnable? {
+    return null
+  }
 }

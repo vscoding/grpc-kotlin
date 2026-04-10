@@ -1,19 +1,19 @@
 pluginManagement {
-    repositories {
-        maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
-        gradlePluginPortal()
-    }
+  repositories {
+    maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
+    gradlePluginPortal()
+  }
 }
 
 dependencyResolutionManagement {
-    repositories {
-        maven { url = uri("https://maven.aliyun.com/repository/public/") }
-        mavenCentral()
-    }
+  repositories {
+    maven { url = uri("https://maven.aliyun.com/repository/public/") }
+    mavenCentral()
+  }
 }
 
 plugins {
-    id("com.gradle.develocity") version ("4.3.2")
+  id("com.gradle.develocity") version ("4.3.2")
 }
 
 rootProject.name = "grpc-kotlin"

@@ -12,21 +12,21 @@ import org.springframework.stereotype.Service
  */
 @Service
 class ClearHistoryTask(
-    private val taskScheduler: TaskScheduler,
-    private val registryService: RegistryService
+  private val taskScheduler: TaskScheduler,
+  private val registryService: RegistryService,
 ) : AbstractCronTask() {
 
-    override fun getTaskScheduler(): TaskScheduler {
-        return this.taskScheduler
-    }
+  override fun getTaskScheduler(): TaskScheduler {
+    return this.taskScheduler
+  }
 
-    override fun cron(): String {
-        // 每一分钟执行一次
-        return "0 * * * * ?"
-    }
+  override fun cron(): String {
+    // 每一分钟执行一次
+    return "0 * * * * ?"
+  }
 
-    override fun getRunnable(): Runnable {
-        return Runnable { registryService.clearHistoryClients() }
-    }
+  override fun getRunnable(): Runnable {
+    return Runnable { registryService.clearHistoryClients() }
+  }
 
 }

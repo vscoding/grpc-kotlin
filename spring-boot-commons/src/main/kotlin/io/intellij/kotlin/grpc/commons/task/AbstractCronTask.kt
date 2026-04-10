@@ -13,58 +13,58 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 abstract class AbstractCronTask : CronTask, InitializingBean {
 
-    private val status = AtomicBoolean(false)
+  private val status = AtomicBoolean(false)
 
-    private var future: ScheduledFuture<*>? = null
+  private var future: ScheduledFuture<*>? = null
 
-    override fun running(): Boolean = status.get()
+  override fun running(): Boolean = status.get()
 
-    /**
-     * Retrieves the TaskScheduler for scheduling tasks.
-     *
-     * @return The TaskScheduler instance used for task scheduling.
-     */
-    abstract fun getTaskScheduler(): TaskScheduler?
+  /**
+   * Retrieves the TaskScheduler for scheduling tasks.
+   *
+   * @return The TaskScheduler instance used for task scheduling.
+   */
+  abstract fun getTaskScheduler(): TaskScheduler?
 
-    /**
-     * Retrieves the [Runnable] instance for executing the task.
-     *
-     * @return The [Runnable] instance for executing the task.
-     */
-    abstract fun getRunnable(): Runnable?
+  /**
+   * Retrieves the [Runnable] instance for executing the task.
+   *
+   * @return The [Runnable] instance for executing the task.
+   */
+  abstract fun getRunnable(): Runnable?
 
-    /**
-     * Determines whether the implementing class should start running the task on initialization.
-     *
-     * @return true if the task should start on initialization, false otherwise.
-     */
-    open fun startOnInitializing(): Boolean {
-        return false
+  /**
+   * Determines whether the implementing class should start running the task on initialization.
+   *
+   * @return true if the task should start on initialization, false otherwise.
+   */
+  open fun startOnInitializing(): Boolean {
+    return false
+  }
+
+  override fun start() {
+    if (!status.compareAndSet(false, true)) {
+      return
     }
-
-    override fun start() {
-        if (!status.compareAndSet(false, true)) {
-            return
-        }
-        this.future = getRunnable()?.let {
-            getTaskScheduler()?.schedule(it, CronTrigger(cron()))
-        }
+    this.future = getRunnable()?.let {
+      getTaskScheduler()?.schedule(it, CronTrigger(cron()))
     }
+  }
 
-    override fun stop() {
-        if (!status.compareAndSet(true, false)) {
-            return
-        }
-        this.future?.also {
-            it.cancel(true)
-        }
+  override fun stop() {
+    if (!status.compareAndSet(true, false)) {
+      return
     }
+    this.future?.also {
+      it.cancel(true)
+    }
+  }
 
-    @Throws(Exception::class)
-    override fun afterPropertiesSet() {
-        if (startOnInitializing()) {
-            start()
-        }
+  @Throws(Exception::class)
+  override fun afterPropertiesSet() {
+    if (startOnInitializing()) {
+      start()
     }
+  }
 
 }

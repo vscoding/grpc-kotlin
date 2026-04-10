@@ -14,31 +14,31 @@ import java.net.InetSocketAddress
  * @author tech@intellij.io
  */
 class MonitoringServerTransportFilter(
-    val registryService: RegistryService
+  val registryService: RegistryService,
 ) : ServerTransportFilter() {
 
-    companion object {
-        private val log = getLogger(MonitoringServerTransportFilter::class.java)
-    }
+  companion object {
+    private val log = getLogger(MonitoringServerTransportFilter::class.java)
+  }
 
-    override fun transportReady(transportAttrs: Attributes): Attributes? {
-        log.info("transport ready: {}", transportAttrs)
-        registryService.markUp(
-            Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false)
-        )
-        return super.transportReady(transportAttrs)
-    }
+  override fun transportReady(transportAttrs: Attributes): Attributes? {
+    log.info("transport ready: {}", transportAttrs)
+    registryService.markUp(
+      Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false),
+    )
+    return super.transportReady(transportAttrs)
+  }
 
-    override fun transportTerminated(transportAttrs: Attributes) {
-        registryService.markDown(
-            Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false)
-        )
-        val client = transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)
-        if (client is InetSocketAddress) {
-            log.error("transport terminated: ip = {} ;port = {}", client.hostString, client.port)
-        } else {
-            log.error("transport terminated: {}", transportAttrs)
-        }
-        super.transportTerminated(transportAttrs)
+  override fun transportTerminated(transportAttrs: Attributes) {
+    registryService.markDown(
+      Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false),
+    )
+    val client = transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)
+    if (client is InetSocketAddress) {
+      log.error("transport terminated: ip = {} ;port = {}", client.hostString, client.port)
+    } else {
+      log.error("transport terminated: {}", transportAttrs)
     }
+    super.transportTerminated(transportAttrs)
+  }
 }

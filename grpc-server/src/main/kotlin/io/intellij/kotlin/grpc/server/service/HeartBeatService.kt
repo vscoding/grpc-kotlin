@@ -14,15 +14,15 @@ import net.devh.boot.grpc.server.service.GrpcService
  */
 @GrpcService
 class HeartBeatService : HeartBeatServiceGrpc.HeartBeatServiceImplBase() {
-    companion object {
-        private val log = getLogger(HeartBeatService::class.java)
-    }
+  companion object {
+    private val log = getLogger(HeartBeatService::class.java)
+  }
 
-    override fun report(request: Ping, responseObserver: StreamObserver<Pong>) {
-        val id: String = request.getId()
-        log.debug("received heartbeat from {}", id)
-        responseObserver.onNext(Pong.newBuilder().setRes("pong $id").build())
-        responseObserver.onCompleted()
-    }
+  override fun report(request: Ping, responseObserver: StreamObserver<Pong>) {
+    val id: String = request.getId()
+    log.debug("received heartbeat from {}", id)
+    responseObserver.onNext(Pong.newBuilder().setRes("pong $id").build())
+    responseObserver.onCompleted()
+  }
 
 }

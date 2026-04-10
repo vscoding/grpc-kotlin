@@ -19,37 +19,37 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class GrpcConfig {
-    @Bean
-    fun monitoringClientTransportFilter(registryService: RegistryService): ClientTransportFilter {
-        return MonitoringClientTransportFilter(registryService)
-    }
+  @Bean
+  fun monitoringClientTransportFilter(registryService: RegistryService): ClientTransportFilter {
+    return MonitoringClientTransportFilter(registryService)
+  }
 
-    /**
-     * Adds a client transport filter to the channel builder, if it is an instance of NettyChannelBuilder.
-     *
-     * [GrpcChannelConfigurer](https://yidongnan.github.io/grpc-spring-boot-starter/zh-CN/client/configuration.html#clientInterceptor)
-     *
-     * @param monitoringClientTransportFilter the client transport filter to be added
-     * @return the configured channel builder
-     */
-    @Bean
-    fun transportFilter(monitoringClientTransportFilter: ClientTransportFilter?): GrpcChannelConfigurer {
-        return GrpcChannelConfigurer { channelBuilder: ManagedChannelBuilder<*>?, name: String? ->
-            if (channelBuilder is NettyChannelBuilder) {
-                channelBuilder // .enableRetry()
-                    // .maxHedgedAttempts(10)
-                    .addTransportFilter(monitoringClientTransportFilter)
-            }
-        }
+  /**
+   * Adds a client transport filter to the channel builder, if it is an instance of NettyChannelBuilder.
+   *
+   * [GrpcChannelConfigurer](https://yidongnan.github.io/grpc-spring-boot-starter/zh-CN/client/configuration.html#clientInterceptor)
+   *
+   * @param monitoringClientTransportFilter the client transport filter to be added
+   * @return the configured channel builder
+   */
+  @Bean
+  fun transportFilter(monitoringClientTransportFilter: ClientTransportFilter?): GrpcChannelConfigurer {
+    return GrpcChannelConfigurer { channelBuilder: ManagedChannelBuilder<*>?, name: String? ->
+      if (channelBuilder is NettyChannelBuilder) {
+        channelBuilder // .enableRetry()
+          // .maxHedgedAttempts(10)
+          .addTransportFilter(monitoringClientTransportFilter)
+      }
     }
+  }
 
-    @GrpcGlobalClientInterceptor
-    fun grpcConnectionClientInterceptor(registryService: RegistryService): ClientInterceptor {
-        return GrpcConnClientInterceptor(registryService)
-    }
+  @GrpcGlobalClientInterceptor
+  fun grpcConnectionClientInterceptor(registryService: RegistryService): ClientInterceptor {
+    return GrpcConnClientInterceptor(registryService)
+  }
 
-    companion object {
-        const val GRPC_SERVER_INSTANCE: String = "grpc-server"
-    }
+  companion object {
+    const val GRPC_SERVER_INSTANCE: String = "grpc-server"
+  }
 
 }
