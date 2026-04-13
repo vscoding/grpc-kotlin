@@ -15,8 +15,7 @@ import java.util.UUID
 class HeartBeatCronTask(
   private val taskScheduler: TaskScheduler,
   private val heartBeatService: HeartBeatService,
-
-  ) : AbstractCronTask() {
+) : AbstractCronTask() {
   override fun cron(): String {
     return "*/3 * * * * ?"
   }
