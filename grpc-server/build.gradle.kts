@@ -17,6 +17,11 @@ kotlin {
   jvmToolchain(projectJdkVersion)
 }
 
+repositories {
+  maven { url = uri("https://maven.aliyun.com/repository/public/") }
+  mavenCentral()
+}
+
 dependencies {
   implementation(project(":protos"))
   implementation(project(":spring-boot-commons"))

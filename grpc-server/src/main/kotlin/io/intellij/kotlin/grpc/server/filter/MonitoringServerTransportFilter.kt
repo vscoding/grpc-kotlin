@@ -23,21 +23,31 @@ class MonitoringServerTransportFilter(
 
   override fun transportReady(transportAttrs: Attributes): Attributes? {
     log.info("transport ready: {}", transportAttrs)
+    val remoteSocketAddress = transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)
+    if (remoteSocketAddress == null) {
+      log.warn("transport ready without remote address: {}", transportAttrs)
+      return super.transportReady(transportAttrs)
+    }
     registryService.markUp(
-      Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false),
+      Address.from(remoteSocketAddress, false),
     )
     return super.transportReady(transportAttrs)
   }
 
   override fun transportTerminated(transportAttrs: Attributes) {
+    val remoteSocketAddress = transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)
+    if (remoteSocketAddress == null) {
+      log.warn("transport terminated without remote address: {}", transportAttrs)
+      super.transportTerminated(transportAttrs)
+      return
+    }
     registryService.markDown(
-      Address.from(transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)!!, false),
+      Address.from(remoteSocketAddress, false),
     )
-    val client = transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)
-    if (client is InetSocketAddress) {
-      log.error("transport terminated: ip = {} ;port = {}", client.hostString, client.port)
+    if (remoteSocketAddress is InetSocketAddress) {
+      log.info("transport terminated: ip = {} ;port = {}", remoteSocketAddress.hostString, remoteSocketAddress.port)
     } else {
-      log.error("transport terminated: {}", transportAttrs)
+      log.info("transport terminated: {}", transportAttrs)
     }
     super.transportTerminated(transportAttrs)
   }

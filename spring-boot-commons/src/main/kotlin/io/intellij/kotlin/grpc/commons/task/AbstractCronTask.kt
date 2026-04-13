@@ -1,5 +1,6 @@
 package io.intellij.kotlin.grpc.commons.task
 
+import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.support.CronTrigger
@@ -11,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * @author tech@intellij.io
  */
-abstract class AbstractCronTask : CronTask, InitializingBean {
+abstract class AbstractCronTask : CronTask, InitializingBean, DisposableBean {
 
   private val status = AtomicBoolean(false)
 
@@ -65,6 +66,10 @@ abstract class AbstractCronTask : CronTask, InitializingBean {
     if (startOnInitializing()) {
       start()
     }
+  }
+
+  override fun destroy() {
+    stop()
   }
 
 }

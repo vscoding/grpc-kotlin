@@ -16,7 +16,13 @@ kotlin {
   jvmToolchain(projectJdkVersion)
 }
 
+repositories {
+  maven { url = uri("https://maven.aliyun.com/repository/public/") }
+  mavenCentral()
+}
+
 dependencies {
   implementation(libs.spring.boot)
   implementation(libs.spring.boot.starter.logging)
+  implementation(kotlin("stdlib-jdk8"))
 }

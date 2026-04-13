@@ -15,8 +15,9 @@ data class ServerConn(
   companion object {
     val DEFAULT: ServerConn = ServerConn(false, Address.UNKNOWN_REMOTE, Address.UNKNOWN_LOCAL)
 
-    fun create(remoteHost: String, remotePort: Int, localPort: Int): ServerConn {
-      return ServerConn(true, Address(remoteHost, remotePort), Address(Address.LOCAL_HOST, localPort))
+    fun create(remote: Address, local: Address): ServerConn {
+      return ServerConn(true, remote, local)
     }
   }
+
 }

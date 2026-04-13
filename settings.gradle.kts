@@ -5,13 +5,6 @@ pluginManagement {
   }
 }
 
-dependencyResolutionManagement {
-  repositories {
-    maven { url = uri("https://maven.aliyun.com/repository/public/") }
-    mavenCentral()
-  }
-}
-
 plugins {
   id("com.gradle.develocity") version ("4.3.2")
 }

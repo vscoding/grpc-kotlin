@@ -22,12 +22,12 @@ class ClientStreamService : ClientStreamServiceGrpc.ClientStreamServiceImplBase(
     responseObserver: StreamObserver<StreamResponse>,
   ): StreamObserver<StreamRequest> {
     return object : StreamObserver<StreamRequest> {
-      private val dataList = mutableListOf<String>()
+      private var dataCount = 0
 
       override fun onNext(request: StreamRequest) {
         request.data.also {
+          dataCount++
           log.info("[Client Stream] receive data: {}", it)
-          dataList.add(it)
         }
       }
 
@@ -36,10 +36,10 @@ class ClientStreamService : ClientStreamServiceGrpc.ClientStreamServiceImplBase(
       }
 
       override fun onCompleted() {
-        log.info("[Client Stream] receive completed. data size = {}", dataList.size)
+        log.info("[Client Stream] receive completed. data size = {}", dataCount)
         responseObserver.onNext(
           StreamResponse.newBuilder().setData(
-            "[Client Stream] Response, total data size = ${dataList.size}",
+            "[Client Stream] Response, total data size = $dataCount",
           ).build(),
         )
         responseObserver.onCompleted()

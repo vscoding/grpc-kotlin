@@ -18,6 +18,11 @@ kotlin {
   jvmToolchain(projectJdkVersion)
 }
 
+repositories {
+  maven { url = uri("https://maven.aliyun.com/repository/public/") }
+  mavenCentral()
+}
+
 dependencies {
   // Align all gRPC components via BOM
   api(platform(libs.grpc.bom))

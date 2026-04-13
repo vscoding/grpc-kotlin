@@ -5,11 +5,12 @@ import io.grpc.Channel
 import io.grpc.ClientCall
 import io.grpc.ClientInterceptor
 import io.grpc.ForwardingClientCall.SimpleForwardingClientCall
+import io.grpc.ForwardingClientCallListener.SimpleForwardingClientCallListener
 import io.grpc.Metadata
 import io.grpc.MethodDescriptor
+import io.grpc.Status
 import io.intellij.kotlin.grpc.client.context.RegistryService
 import io.intellij.kotlin.grpc.commons.config.getLogger
-import java.util.Objects
 
 /**
  * GrpcConnClientInterceptor
@@ -30,8 +31,30 @@ class GrpcConnClientInterceptor(
 
     return object : SimpleForwardingClientCall<ReqT, RespT>(next.newCall<ReqT, RespT>(method, callOptions)) {
       override fun start(responseListener: Listener<RespT>, headers: Metadata?) {
-        // log.debug("GrpcConnectionClientInterceptor start");
-        super.start(responseListener, headers)
+        super.start(
+          object : SimpleForwardingClientCallListener<RespT>(responseListener) {
+            override fun onClose(status: Status, trailers: Metadata) {
+              try {
+                super.onClose(status, trailers)
+              } finally {
+                when (status.code) {
+                  Status.Code.OK -> registryService.markServerReady()
+                  Status.Code.UNAVAILABLE -> {
+                    registryService.markServerNotReady()
+                    log.warn("Grpc call unavailable. method={}", method?.fullMethodName)
+                  }
+
+                  else -> log.debug(
+                    "Grpc call closed. method={}, status={}",
+                    method?.fullMethodName,
+                    status.code,
+                  )
+                }
+              }
+            }
+          },
+          headers,
+        )
       }
 
       override fun sendMessage(message: ReqT) {
@@ -43,11 +66,7 @@ class GrpcConnClientInterceptor(
         try {
           super.cancel(message, cause)
         } finally {
-          registryService.markServerNotReady()
-          log.error(
-            "GrpcConnectionClientInterceptor cancel {}",
-            if (Objects.nonNull(cause)) cause!!.javaClass else "NULL",
-          )
+          log.debug("Grpc call cancelled. cause={}", cause?.javaClass ?: "NULL")
         }
       }
     }

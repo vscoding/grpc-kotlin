@@ -57,7 +57,10 @@ interface RegistryService {
 class DefaultRegistryService(
   val clientConnRegistry: ClientConnRegistry,
 ) : RegistryService {
-  private val log = getLogger(DefaultRegistryService::class.java)
+  companion object {
+    private val log = getLogger(DefaultRegistryService::class.java)
+    private const val MAX_HISTORY_CLIENTS = 1024
+  }
 
   private val lock: Lock = ReentrantLock()
 
@@ -75,15 +78,32 @@ class DefaultRegistryService(
     try {
       clientConnRegistry.live.remove(client)
       log.info("add history")
-      clientConnRegistry.history.add(ClientConn.down(client))
+      clientConnRegistry.history.addLast(ClientConn.down(client))
+      while (clientConnRegistry.history.size > MAX_HISTORY_CLIENTS) {
+        clientConnRegistry.history.removeFirst()
+      }
     } finally {
       lock.unlock()
     }
   }
 
-  override fun getLiveClients(): List<ClientConn> = clientConnRegistry.live.values.toList()
+  override fun getLiveClients(): List<ClientConn> {
+    lock.lock()
+    try {
+      return clientConnRegistry.live.values.toList()
+    } finally {
+      lock.unlock()
+    }
+  }
 
-  override fun getHistoryClients(): List<ClientConn> = clientConnRegistry.live.values.toList()
+  override fun getHistoryClients(): List<ClientConn> {
+    lock.lock()
+    try {
+      return clientConnRegistry.history.toList()
+    } finally {
+      lock.unlock()
+    }
+  }
 
   override fun clearHistoryClients() {
     lock.lock()

@@ -6,6 +6,7 @@ import io.grpc.ServerCall
 import io.grpc.ServerCallHandler
 import io.grpc.ServerInterceptor
 import io.intellij.kotlin.grpc.commons.config.getLogger
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -19,39 +20,51 @@ class GrpcConnCounterInterceptor : ServerInterceptor {
     private val log = getLogger(GrpcConnCounterInterceptor::class.java)
   }
 
-  private val connectionCount = AtomicInteger(0)
+  private val activeRpcCount = AtomicInteger(0)
 
   override fun <ReqT, RespT> interceptCall(
     call: ServerCall<ReqT, RespT>,
     headers: Metadata?,
     next: ServerCallHandler<ReqT, RespT>,
   ): ServerCall.Listener<ReqT> {
-    connectionCount.incrementAndGet()
-
-    log.debug("Current Connection Count: {}", connectionCount.get())
+    activeRpcCount.incrementAndGet()
     val methodDescriptor = call.getMethodDescriptor()
+    val methodName = methodDescriptor.fullMethodName
+    val closed = AtomicBoolean(false)
 
-    log.debug("MethodDescriptor | {}", methodDescriptor.fullMethodName)
+    log.debug("Active RPC Count: {}, method={}", activeRpcCount.get(), methodName)
 
-    return object : SimpleForwardingServerCallListener<ReqT>(next.startCall(call, headers)) {
-      override fun onHalfClose() {
+    val listener = try {
+      next.startCall(call, headers)
+    } catch (t: Throwable) {
+      closeRpc(closed, methodName)
+      throw t
+    }
+
+    return object : SimpleForwardingServerCallListener<ReqT>(listener) {
+      override fun onCancel() {
         try {
-          super.onHalfClose()
+          log.debug("RPC cancelled by client. method={}", methodName)
+          super.onCancel()
         } finally {
-          connectionCount.decrementAndGet()
-          log.debug("Current Connection Count: {}", connectionCount.get())
+          closeRpc(closed, methodName)
         }
       }
 
-      override fun onCancel() {
-        log.debug("Connection cancelled by client.")
-        super.onCancel()
-      }
-
       override fun onComplete() {
-        log.debug("Connection completed by client.")
-        super.onComplete()
+        try {
+          log.debug("RPC completed by client. method={}", methodName)
+          super.onComplete()
+        } finally {
+          closeRpc(closed, methodName)
+        }
       }
+    }
+  }
+
+  private fun closeRpc(closed: AtomicBoolean, methodName: String) {
+    if (closed.compareAndSet(false, true)) {
+      log.debug("Active RPC Count: {}, method={}", activeRpcCount.decrementAndGet(), methodName)
     }
   }
 

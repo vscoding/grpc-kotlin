@@ -1,5 +1,7 @@
 package io.intellij.kotlin.grpc.client.service
 
+import io.grpc.stub.ClientCallStreamObserver
+import io.grpc.stub.ClientResponseObserver
 import io.grpc.stub.StreamObserver
 import io.intellij.kotlin.grpc.api.BidiStreamServiceGrpc
 import io.intellij.kotlin.grpc.api.ClientStreamServiceGrpc
@@ -11,7 +13,9 @@ import io.intellij.kotlin.grpc.commons.config.getLogger
 import net.devh.boot.grpc.client.inject.GrpcClient
 import org.springframework.core.task.TaskExecutor
 import org.springframework.stereotype.Service
-import java.lang.Thread.sleep
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * StreamService
@@ -55,46 +59,51 @@ class DefaultStreamService(
    * @param count the number of messages or elements to be sent through the client-to-server stream
    */
   override fun clientStream(count: Int) {
+    val next = AtomicInteger(1)
+    val completed = AtomicBoolean(false)
 
-    val requestObserver: StreamObserver<StreamRequest> =
-      clientStreamServiceStub.clientStreaming(
-        object : StreamObserver<StreamResponse> {
-          override fun onNext(response: StreamResponse) {
-            log.info("[Client Stream] Received response from server: {}", response.data)
+    clientStreamServiceStub.withDeadlineAfter(10, TimeUnit.SECONDS).clientStreaming(
+      object : ClientResponseObserver<StreamRequest, StreamResponse> {
+        private lateinit var requestStream: ClientCallStreamObserver<StreamRequest>
+
+        override fun beforeStart(requestStream: ClientCallStreamObserver<StreamRequest>) {
+          this.requestStream = requestStream
+          requestStream.setOnReadyHandler {
+            drainRequests(requestStream, next, count, "[Client Stream] Request Data:", completed)
           }
-
-          override fun onError(t: Throwable) {
-            log.error("Error occurred during client streaming", t)
+          taskExecutor.execute {
+            drainRequests(requestStream, next, count, "[Client Stream] Request Data:", completed)
           }
+        }
 
-          override fun onCompleted() {
-            log.info("[Client Stream] completed")
-          }
-        },
-      )
+        override fun onNext(response: StreamResponse) {
+          log.info("[Client Stream] Received response from server: {}", response.data)
+        }
 
-    for (i in 1..count) {
-      requestObserver.onNext(
-        StreamRequest.newBuilder().setData("[Client Stream] Request Data: $i").build(),
-      )
-      sleep(100)
-    }
+        override fun onError(t: Throwable) {
+          completed.set(true)
+          log.error("Error occurred during client streaming", t)
+        }
 
-    requestObserver.onCompleted()
-
+        override fun onCompleted() {
+          completed.set(true)
+          log.info("[Client Stream] completed")
+        }
+      },
+    )
   }
 
   override fun serverStream(data: String) {
     val request = StreamRequest.newBuilder().setData(data).build()
-    serverStreamServiceStub.serverStreaming(
+    serverStreamServiceStub.withDeadlineAfter(10, TimeUnit.SECONDS).serverStreaming(
       request,
       object : StreamObserver<StreamResponse> {
-        private val dataList = mutableListOf<String>()
+        private var responseCount = 0
 
         override fun onNext(response: StreamResponse) {
           response.data.also { respData ->
+            responseCount++
             log.info("[Server Stream] Received response from server: {}", respData)
-            dataList.add(respData)
           }
         }
 
@@ -103,42 +112,67 @@ class DefaultStreamService(
         }
 
         override fun onCompleted() {
-          log.info("[Server Stream] completed")
-          dataList.forEach { dataItem ->
-            log.info("Collected data item: {}", dataItem)
-          }
+          log.info("[Server Stream] completed. response count={}", responseCount)
         }
       },
     )
   }
 
   override fun bidiStream(count: Int) {
+    val next = AtomicInteger(1)
+    val completed = AtomicBoolean(false)
 
-    bidiStreamServiceGrpcStub.bidiStreaming(
-      object : StreamObserver<StreamResponse> {
+    bidiStreamServiceGrpcStub.withDeadlineAfter(10, TimeUnit.SECONDS).bidiStreaming(
+      object : ClientResponseObserver<StreamRequest, StreamResponse> {
+        private lateinit var requestStream: ClientCallStreamObserver<StreamRequest>
+
+        override fun beforeStart(requestStream: ClientCallStreamObserver<StreamRequest>) {
+          this.requestStream = requestStream
+          requestStream.setOnReadyHandler {
+            drainRequests(requestStream, next, count, "[Bidi Stream] Request Data:", completed)
+          }
+          taskExecutor.execute {
+            drainRequests(requestStream, next, count, "[Bidi Stream] Request Data:", completed)
+          }
+        }
+
         override fun onNext(response: StreamResponse) {
           response.data.also { respData ->
-            taskExecutor.execute { log.info("[Bidi Stream] Received response from server: {}", respData) }
+            log.info("[Bidi Stream] Received response from server: {}", respData)
           }
         }
 
         override fun onError(t: Throwable) {
+          completed.set(true)
           log.error("Error occurred during bidi streaming", t)
         }
 
         override fun onCompleted() {
+          completed.set(true)
           log.info("[Bidi Stream] completed")
         }
 
       },
-    ).also { requestObserver ->
-      for (i in 1..count) {
-        requestObserver.onNext(StreamRequest.newBuilder().setData("[Bidi Stream] Request Data: $i").build())
-        sleep(100)
-      }
-      requestObserver.onCompleted()
-    }
+    )
 
+  }
+
+  private fun drainRequests(
+    requestStream: ClientCallStreamObserver<StreamRequest>,
+    next: AtomicInteger,
+    count: Int,
+    prefix: String,
+    completed: AtomicBoolean,
+  ) {
+    synchronized(requestStream) {
+      while (!completed.get() && requestStream.isReady && next.get() <= count) {
+        val index = next.getAndIncrement()
+        requestStream.onNext(StreamRequest.newBuilder().setData("$prefix $index").build())
+      }
+      if (next.get() > count && completed.compareAndSet(false, true)) {
+        requestStream.onCompleted()
+      }
+    }
   }
 
 }

@@ -9,6 +9,7 @@ import io.intellij.kotlin.grpc.client.entities.GrpcConvertUtils
 import io.intellij.kotlin.grpc.multi.MultiServiceGrpc
 import net.devh.boot.grpc.client.inject.GrpcClient
 import org.springframework.stereotype.Service
+import java.util.concurrent.TimeUnit
 
 /**
  * TestService
@@ -37,15 +38,19 @@ interface TestService {
     private lateinit var multiServiceBlockingStub: MultiServiceGrpc.MultiServiceBlockingStub
 
     override fun test(name: String): String {
-      val helloResponse: EchoProto.HelloResponse = helloServiceBlockingStub.greeting(
-        EchoProto.HelloRequest.newBuilder().setName(name).build(),
-      )
+      val helloResponse: EchoProto.HelloResponse = helloServiceBlockingStub
+        .withDeadlineAfter(3, TimeUnit.SECONDS)
+        .greeting(
+          EchoProto.HelloRequest.newBuilder().setName(name).build(),
+        )
       return helloResponse.getWelcome()
     }
 
     override fun greet(req: GreetReq): GreetResp {
       return GrpcConvertUtils.convert(
-        multiServiceBlockingStub.sayHello(req.cast()),
+        multiServiceBlockingStub
+          .withDeadlineAfter(3, TimeUnit.SECONDS)
+          .sayHello(req.cast()),
       )
     }
   }
