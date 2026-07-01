@@ -5,12 +5,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
 /**
- * ServerConnRegistry
+ * ServerConnRuntime
  *
  * @author tech@intellij.io
  */
 @Repository
-class ServerConnRegistry {
+class ServerConnRuntime {
   private val _serverReady = AtomicBoolean(false)
   val serverReady: AtomicBoolean get() = _serverReady
   private val _serverConn = AtomicReference(ServerConn.DEFAULT)

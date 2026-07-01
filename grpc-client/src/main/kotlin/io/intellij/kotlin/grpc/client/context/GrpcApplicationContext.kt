@@ -42,7 +42,7 @@ interface GrpcApplicationContext : ApplicationContextAware {
 
 @Service
 class DefaultGrpcApplicationContextImpl(
-  private val serverConnRegistry: ServerConnRegistry,
+  private val serverConnRuntime: ServerConnRuntime,
   @param:Value("\${spring.application.name}") private val appName: String,
 ) : GrpcApplicationContext {
 
@@ -54,9 +54,9 @@ class DefaultGrpcApplicationContextImpl(
   override val springApplicationContext: ApplicationContext?
     get() = this.applicationContext
 
-  override fun serverReady(): Boolean = serverConnRegistry.serverReady.get()
+  override fun serverReady(): Boolean = serverConnRuntime.serverReady.get()
 
-  override fun serverConn(): ServerConn = serverConnRegistry.serverConn.get()
+  override fun serverConn(): ServerConn = serverConnRuntime.serverConn.get()
 
   override fun setApplicationContext(applicationContext: ApplicationContext) {
     this.applicationContext = applicationContext

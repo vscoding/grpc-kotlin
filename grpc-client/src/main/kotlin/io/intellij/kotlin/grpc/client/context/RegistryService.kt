@@ -72,21 +72,20 @@ interface RegistryService {
    * @param remote The remote address to connect to.
    * @param local The local address initiating the connection.
    */
-  fun connect(remote: Address, local: Address)
+  fun onConnect(remote: Address, local: Address)
 
   /**
    * Disconnects from the currently connected server.
    *
-   *
    * This method is used to disconnect from the server that was previously connected using the [.connect] method.
    * After calling this method, the connection to the server will be terminated and the server details will be reset to their default values.
    */
-  fun disconnect(remote: Address? = null, local: Address? = null)
+  fun onDisconnect(remote: Address? = null, local: Address? = null)
 }
 
 @Service
 class DefaultRegistryService(
-  private val severConnRegistry: ServerConnRegistry,
+  private val severConnRegistry: ServerConnRuntime,
 ) : RegistryService {
 
   private val log = getLogger(DefaultRegistryService::class.java)
@@ -121,7 +120,7 @@ class DefaultRegistryService(
     return severConnRegistry.serverConn.get()
   }
 
-  override fun connect(remote: Address, local: Address) {
+  override fun onConnect(remote: Address, local: Address) {
     connLock.lock()
     try {
       this.setServerConn(remote, local)
@@ -130,7 +129,7 @@ class DefaultRegistryService(
     }
   }
 
-  override fun disconnect(remote: Address?, local: Address?) {
+  override fun onDisconnect(remote: Address?, local: Address?) {
     connLock.lock()
     try {
       val expectedConn = if (remote != null && local != null) ServerConn.create(remote, local) else null

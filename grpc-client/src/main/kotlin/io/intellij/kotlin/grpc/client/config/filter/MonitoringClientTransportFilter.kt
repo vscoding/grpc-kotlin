@@ -29,23 +29,23 @@ class MonitoringClientTransportFilter(
     }
     val remote: Address = Address.from(remoteSocketAddress, false)
     val local: Address = Address.from(localSocketAddress, true)
-    registryService.connect(remote, local)
+    registryService.onConnect(remote, local)
     return super.transportReady(transportAttrs)
   }
 
   override fun transportTerminated(transportAttrs: Attributes?) {
     log.debug("transport terminated: {}", transportAttrs)
     if (transportAttrs == null) {
-      registryService.disconnect()
+      registryService.onDisconnect()
       return
     }
     val remoteSocketAddress = transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)
     val localSocketAddress = transportAttrs.get(Grpc.TRANSPORT_ATTR_LOCAL_ADDR)
     if (remoteSocketAddress == null || localSocketAddress == null) {
-      registryService.disconnect()
+      registryService.onDisconnect()
       return
     }
-    registryService.disconnect(
+    registryService.onDisconnect(
       Address.from(remoteSocketAddress, false),
       Address.from(localSocketAddress, true),
     )

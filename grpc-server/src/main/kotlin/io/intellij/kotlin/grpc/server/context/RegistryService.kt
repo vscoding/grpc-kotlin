@@ -55,7 +55,7 @@ interface RegistryService {
 
 @Service
 class DefaultRegistryService(
-  val clientConnRegistry: ClientConnRegistry,
+  val clientConnRuntime: ClientConnRuntime,
 ) : RegistryService {
   companion object {
     private val log = getLogger(DefaultRegistryService::class.java)
@@ -67,7 +67,7 @@ class DefaultRegistryService(
   override fun markUp(client: Address) {
     lock.lock()
     try {
-      clientConnRegistry.live[client] = ClientConn.up(client)
+      clientConnRuntime.live[client] = ClientConn.up(client)
     } finally {
       lock.unlock()
     }
@@ -76,11 +76,11 @@ class DefaultRegistryService(
   override fun markDown(client: Address) {
     lock.lock()
     try {
-      clientConnRegistry.live.remove(client)
+      clientConnRuntime.live.remove(client)
       log.info("add history")
-      clientConnRegistry.history.addLast(ClientConn.down(client))
-      while (clientConnRegistry.history.size > MAX_HISTORY_CLIENTS) {
-        clientConnRegistry.history.removeFirst()
+      clientConnRuntime.history.addLast(ClientConn.down(client))
+      while (clientConnRuntime.history.size > MAX_HISTORY_CLIENTS) {
+        clientConnRuntime.history.removeFirst()
       }
     } finally {
       lock.unlock()
@@ -90,7 +90,7 @@ class DefaultRegistryService(
   override fun getLiveClients(): List<ClientConn> {
     lock.lock()
     try {
-      return clientConnRegistry.live.values.toList()
+      return clientConnRuntime.live.values.toList()
     } finally {
       lock.unlock()
     }
@@ -99,7 +99,7 @@ class DefaultRegistryService(
   override fun getHistoryClients(): List<ClientConn> {
     lock.lock()
     try {
-      return clientConnRegistry.history.toList()
+      return clientConnRuntime.history.toList()
     } finally {
       lock.unlock()
     }
@@ -108,7 +108,7 @@ class DefaultRegistryService(
   override fun clearHistoryClients() {
     lock.lock()
     try {
-      clientConnRegistry.clearHistoryClients()
+      clientConnRuntime.clearHistoryClients()
     } finally {
       lock.unlock()
     }

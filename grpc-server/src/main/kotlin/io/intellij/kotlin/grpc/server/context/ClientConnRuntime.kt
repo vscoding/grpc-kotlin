@@ -11,7 +11,7 @@ import java.util.ArrayDeque
  * @author tech@intellij.io
  */
 @Repository
-class ClientConnRegistry {
+class ClientConnRuntime {
   private val _live: MutableMap<Address, ClientConn> = Maps.newConcurrentMap()
   val live: MutableMap<Address, ClientConn> get() = _live
 
