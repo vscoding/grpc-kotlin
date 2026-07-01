@@ -9,7 +9,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 /**
  * TestService
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @GrpcService
 class EchoService : HelloServiceGrpc.HelloServiceImplBase() {

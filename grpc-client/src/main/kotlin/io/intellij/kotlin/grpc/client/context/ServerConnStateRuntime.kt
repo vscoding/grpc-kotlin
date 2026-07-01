@@ -7,12 +7,12 @@ import java.util.concurrent.atomic.AtomicReference
 /**
  * ServerConnRuntime
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @Repository
-class ServerConnRuntime {
+class ServerConnStateRuntime {
   private val _serverReady = AtomicBoolean(false)
   val serverReady: AtomicBoolean get() = _serverReady
-  private val _serverConn = AtomicReference(ServerConn.DEFAULT)
-  val serverConn: AtomicReference<ServerConn> get() = _serverConn
+  private val _serverConnState = AtomicReference(ServerConnState.DEFAULT)
+  val serverConnState: AtomicReference<ServerConnState> get() = _serverConnState
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 /**
  * GrpcServerApplicationContext
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 interface GrpcServerApplicationContext : ApplicationContextAware {
   /**
@@ -25,14 +25,14 @@ interface GrpcServerApplicationContext : ApplicationContextAware {
    *
    * @return A List of ClientConn objects representing the connected clients.
    */
-  fun liveClients(): List<ClientConn>
+  fun liveClients(): List<ClientConnState>
 
   /**
    * Retrieves the list of historical clients.
    *
    * @return A List of ClientConn objects representing the historical clients.
    */
-  fun historyClients(): List<ClientConn>
+  fun historyClients(): List<ClientConnState>
 }
 
 
@@ -53,11 +53,11 @@ class DefaultGrpcServerApplicationContext(
     return this.applicationContext
   }
 
-  override fun liveClients(): List<ClientConn> {
+  override fun liveClients(): List<ClientConnState> {
     return registryService.getLiveClients()
   }
 
-  override fun historyClients(): List<ClientConn> {
+  override fun historyClients(): List<ClientConnState> {
     return registryService.getHistoryClients()
   }
 }

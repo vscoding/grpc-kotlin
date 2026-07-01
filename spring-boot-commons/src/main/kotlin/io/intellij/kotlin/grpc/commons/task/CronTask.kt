@@ -3,7 +3,7 @@ package io.intellij.kotlin.grpc.commons.task
 /**
  * CronTask
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 interface CronTask {
   /**

@@ -9,7 +9,7 @@ import java.util.UUID
 /**
  * HeartBeatCronTask
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @Service
 class HeartBeatCronTask(

@@ -10,7 +10,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 /**
  * HeartBeatService
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @GrpcService
 class HeartBeatService : HeartBeatServiceGrpc.HeartBeatServiceImplBase() {

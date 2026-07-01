@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration
 /**
  * GrpcServerInterceptorConfig
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @Configuration
 class GrpcServerInterceptorConfig {

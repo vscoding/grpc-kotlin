@@ -1,17 +1,17 @@
 package io.intellij.kotlin.grpc.client.context
 
 import io.intellij.kotlin.grpc.commons.config.getLogger
-import io.intellij.kotlin.grpc.context.Address
+import io.intellij.kotlin.grpc.context.NetworkAddr
 import org.springframework.stereotype.Service
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
 /**
- * RegistryService
+ * RuntimeOperator
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
-interface RegistryService {
+interface RuntimeOperator {
 
   /**
    * Marks the server as ready to receive requests.
@@ -46,7 +46,7 @@ interface RegistryService {
    * @param remote The remote address to associate with the server connection.
    * @param local The local address to associate with the server connection.
    */
-  fun setServerConn(remote: Address, local: Address)
+  fun setServerConn(remote: NetworkAddr, local: NetworkAddr)
 
   /**
    * Clears the server connection details.
@@ -62,7 +62,7 @@ interface RegistryService {
    *
    * @return The ServerConn object representing the server connection details.
    */
-  fun getSeverConn(): ServerConn
+  fun getSeverConn(): ServerConnState
 
   /**
    * Establishes a connection between a remote address and a local address.
@@ -72,7 +72,7 @@ interface RegistryService {
    * @param remote The remote address to connect to.
    * @param local The local address initiating the connection.
    */
-  fun onConnect(remote: Address, local: Address)
+  fun onConnect(remote: NetworkAddr, local: NetworkAddr)
 
   /**
    * Disconnects from the currently connected server.
@@ -80,47 +80,47 @@ interface RegistryService {
    * This method is used to disconnect from the server that was previously connected using the [.connect] method.
    * After calling this method, the connection to the server will be terminated and the server details will be reset to their default values.
    */
-  fun onDisconnect(remote: Address? = null, local: Address? = null)
+  fun onDisconnect(remote: NetworkAddr? = null, local: NetworkAddr? = null)
 }
 
 @Service
-class DefaultRegistryService(
-  private val severConnRegistry: ServerConnRuntime,
-) : RegistryService {
+class DefaultRuntimeOperator(
+  private val serverConnStateRuntime: ServerConnStateRuntime,
+) : RuntimeOperator {
 
-  private val log = getLogger(DefaultRegistryService::class.java)
+  private val log = getLogger(DefaultRuntimeOperator::class.java)
 
   private val connLock: Lock = ReentrantLock()
 
   override fun markServerReady() {
-    severConnRegistry.serverReady.set(true)
+    serverConnStateRuntime.serverReady.set(true)
   }
 
   override fun markServerNotReady() {
-    severConnRegistry.serverReady.set(false)
+    serverConnStateRuntime.serverReady.set(false)
   }
 
 
   override fun isServerReady(): Boolean {
-    return severConnRegistry.serverReady.get()
+    return serverConnStateRuntime.serverReady.get()
   }
 
-  override fun setServerConn(remote: Address, local: Address) {
-    val serverConn: ServerConn = ServerConn.create(remote, local)
-    severConnRegistry.serverConn.set(serverConn)
-    log.debug("ServerConn {}", serverConn)
+  override fun setServerConn(remote: NetworkAddr, local: NetworkAddr) {
+    val serverConnState: ServerConnState = ServerConnState.create(remote, local)
+    serverConnStateRuntime.serverConnState.set(serverConnState)
+    log.debug("ServerConn {}", serverConnState)
   }
 
   override fun clearServerConn() {
-    val oldConn = severConnRegistry.serverConn.getAndSet(ServerConn.DEFAULT)
+    val oldConn = serverConnStateRuntime.serverConnState.getAndSet(ServerConnState.DEFAULT)
     log.debug("Clear ServerConn {}", oldConn)
   }
 
-  override fun getSeverConn(): ServerConn {
-    return severConnRegistry.serverConn.get()
+  override fun getSeverConn(): ServerConnState {
+    return serverConnStateRuntime.serverConnState.get()
   }
 
-  override fun onConnect(remote: Address, local: Address) {
+  override fun onConnect(remote: NetworkAddr, local: NetworkAddr) {
     connLock.lock()
     try {
       this.setServerConn(remote, local)
@@ -129,10 +129,10 @@ class DefaultRegistryService(
     }
   }
 
-  override fun onDisconnect(remote: Address?, local: Address?) {
+  override fun onDisconnect(remote: NetworkAddr?, local: NetworkAddr?) {
     connLock.lock()
     try {
-      val expectedConn = if (remote != null && local != null) ServerConn.create(remote, local) else null
+      val expectedConn = if (remote != null && local != null) ServerConnState.create(remote, local) else null
       val currentConn = this.getSeverConn()
       if (expectedConn == null || currentConn == expectedConn) {
         this.clearServerConn()

@@ -1,6 +1,6 @@
 /**
  * package-info
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 package io.intellij.kotlin.grpc;

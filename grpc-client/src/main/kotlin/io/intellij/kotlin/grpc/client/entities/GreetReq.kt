@@ -7,7 +7,7 @@ import io.intellij.kotlin.grpc.multi.GreetRequest
 /**
  * GreetReq
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 class GreetReq(
   val id: Int = 0,

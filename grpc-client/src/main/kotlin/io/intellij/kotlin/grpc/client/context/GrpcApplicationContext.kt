@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 /**
  * GrpcApplicationContext
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 interface GrpcApplicationContext : ApplicationContextAware {
   /**
@@ -37,12 +37,12 @@ interface GrpcApplicationContext : ApplicationContextAware {
    *
    * @return The server connection information as a ServerConn object.
    */
-  fun serverConn(): ServerConn
+  fun serverConn(): ServerConnState
 }
 
 @Service
 class DefaultGrpcApplicationContextImpl(
-  private val serverConnRuntime: ServerConnRuntime,
+  private val serverConnStateRuntime: ServerConnStateRuntime,
   @param:Value("\${spring.application.name}") private val appName: String,
 ) : GrpcApplicationContext {
 
@@ -54,9 +54,9 @@ class DefaultGrpcApplicationContextImpl(
   override val springApplicationContext: ApplicationContext?
     get() = this.applicationContext
 
-  override fun serverReady(): Boolean = serverConnRuntime.serverReady.get()
+  override fun serverReady(): Boolean = serverConnStateRuntime.serverReady.get()
 
-  override fun serverConn(): ServerConn = serverConnRuntime.serverConn.get()
+  override fun serverConn(): ServerConnState = serverConnStateRuntime.serverConnState.get()
 
   override fun setApplicationContext(applicationContext: ApplicationContext) {
     this.applicationContext = applicationContext

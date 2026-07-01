@@ -1,7 +1,7 @@
 package io.intellij.kotlin.grpc.server.context
 
 import io.intellij.kotlin.grpc.commons.config.getLogger
-import io.intellij.kotlin.grpc.context.Address
+import io.intellij.kotlin.grpc.context.NetworkAddr
 import org.springframework.stereotype.Service
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock
 /**
  * RegistryService
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 interface RegistryService {
 
@@ -18,28 +18,28 @@ interface RegistryService {
    *
    * @param client the address of the client to be marked up
    */
-  fun markUp(client: Address)
+  fun markUp(client: NetworkAddr)
 
   /**
    * Marks the specified client address as inactive or disconnected.
    *
    * @param client the address of the client to be marked down
    */
-  fun markDown(client: Address)
+  fun markDown(client: NetworkAddr)
 
   /**
    * Retrieves the list of currently connected clients.
    *
    * @return A List of ClientConn objects representing the currently live-connected clients.
    */
-  fun getLiveClients(): List<ClientConn>
+  fun getLiveClients(): List<ClientConnState>
 
   /**
    * Retrieves the list of historical client connections.
    *
    * @return A list of ClientConn objects representing the clients that have connected in the past.
    */
-  fun getHistoryClients(): List<ClientConn>
+  fun getHistoryClients(): List<ClientConnState>
 
   /**
    * Clears the history of previously connected clients.
@@ -55,7 +55,7 @@ interface RegistryService {
 
 @Service
 class DefaultRegistryService(
-  val clientConnRuntime: ClientConnRuntime,
+  val clientConnStateRuntime: ClientConnStateRuntime,
 ) : RegistryService {
   companion object {
     private val log = getLogger(DefaultRegistryService::class.java)
@@ -64,42 +64,42 @@ class DefaultRegistryService(
 
   private val lock: Lock = ReentrantLock()
 
-  override fun markUp(client: Address) {
+  override fun markUp(client: NetworkAddr) {
     lock.lock()
     try {
-      clientConnRuntime.live[client] = ClientConn.up(client)
+      clientConnStateRuntime.live[client] = ClientConnState.up(client)
     } finally {
       lock.unlock()
     }
   }
 
-  override fun markDown(client: Address) {
+  override fun markDown(client: NetworkAddr) {
     lock.lock()
     try {
-      clientConnRuntime.live.remove(client)
+      clientConnStateRuntime.live.remove(client)
       log.info("add history")
-      clientConnRuntime.history.addLast(ClientConn.down(client))
-      while (clientConnRuntime.history.size > MAX_HISTORY_CLIENTS) {
-        clientConnRuntime.history.removeFirst()
+      clientConnStateRuntime.history.addLast(ClientConnState.down(client))
+      while (clientConnStateRuntime.history.size > MAX_HISTORY_CLIENTS) {
+        clientConnStateRuntime.history.removeFirst()
       }
     } finally {
       lock.unlock()
     }
   }
 
-  override fun getLiveClients(): List<ClientConn> {
+  override fun getLiveClients(): List<ClientConnState> {
     lock.lock()
     try {
-      return clientConnRuntime.live.values.toList()
+      return clientConnStateRuntime.live.values.toList()
     } finally {
       lock.unlock()
     }
   }
 
-  override fun getHistoryClients(): List<ClientConn> {
+  override fun getHistoryClients(): List<ClientConnState> {
     lock.lock()
     try {
-      return clientConnRuntime.history.toList()
+      return clientConnStateRuntime.history.toList()
     } finally {
       lock.unlock()
     }
@@ -108,7 +108,7 @@ class DefaultRegistryService(
   override fun clearHistoryClients() {
     lock.lock()
     try {
-      clientConnRuntime.clearHistoryClients()
+      clientConnStateRuntime.clearHistoryClients()
     } finally {
       lock.unlock()
     }

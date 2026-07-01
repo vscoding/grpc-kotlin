@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 /**
  * AsyncConfiguration
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @EnableScheduling
 @Configuration

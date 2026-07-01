@@ -9,16 +9,16 @@ import io.grpc.ForwardingClientCallListener.SimpleForwardingClientCallListener
 import io.grpc.Metadata
 import io.grpc.MethodDescriptor
 import io.grpc.Status
-import io.intellij.kotlin.grpc.client.context.RegistryService
+import io.intellij.kotlin.grpc.client.context.RuntimeOperator
 import io.intellij.kotlin.grpc.commons.config.getLogger
 
 /**
  * GrpcConnClientInterceptor
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 class GrpcConnClientInterceptor(
-  val registryService: RegistryService,
+  val runtimeOperator: RuntimeOperator,
 ) : ClientInterceptor {
   companion object {
     private val log = getLogger(GrpcConnClientInterceptor::class.java)
@@ -38,9 +38,9 @@ class GrpcConnClientInterceptor(
                 super.onClose(status, trailers)
               } finally {
                 when (status.code) {
-                  Status.Code.OK -> registryService.markServerReady()
+                  Status.Code.OK -> runtimeOperator.markServerReady()
                   Status.Code.UNAVAILABLE -> {
-                    registryService.markServerNotReady()
+                    runtimeOperator.markServerNotReady()
                     log.warn("Grpc call unavailable. method={}", method?.fullMethodName)
                   }
 

@@ -11,7 +11,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 /**
  * MultiService
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @GrpcService
 class MultiService : MultiServiceGrpc.MultiServiceImplBase() {

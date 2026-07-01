@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 /**
  * RequireGrpcServerReadyAspect
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @Component
 @Aspect

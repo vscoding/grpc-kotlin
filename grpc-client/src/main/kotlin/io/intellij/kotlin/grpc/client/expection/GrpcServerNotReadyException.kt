@@ -3,7 +3,7 @@ package io.intellij.kotlin.grpc.client.expection
 /**
  * ServerNotReadyException
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 class GrpcServerNotReadyException private constructor() : RuntimeException(MSG) {
   companion object {

@@ -4,7 +4,7 @@ import io.grpc.StatusRuntimeException
 import io.intellij.kotlin.grpc.api.HeartBeatServiceGrpc
 import io.intellij.kotlin.grpc.api.common.Ping
 import io.intellij.kotlin.grpc.client.config.GrpcConfig
-import io.intellij.kotlin.grpc.client.context.RegistryService
+import io.intellij.kotlin.grpc.client.context.RuntimeOperator
 import io.intellij.kotlin.grpc.commons.config.getLogger
 import net.devh.boot.grpc.client.inject.GrpcClient
 import org.springframework.stereotype.Service
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 /**
  * HeartBeatService
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 interface HeartBeatService {
   fun doHeartBeat(content: String)
@@ -21,7 +21,7 @@ interface HeartBeatService {
 
 @Service
 class DefaultHeartBeatService(
-  private val registryService: RegistryService,
+  private val runtimeOperator: RuntimeOperator,
 ) : HeartBeatService {
   companion object {
     private val log = getLogger(HeartBeatService::class.java)
@@ -42,12 +42,12 @@ class DefaultHeartBeatService(
         .withDeadlineAfter(2, TimeUnit.SECONDS)
         .report(Ping.newBuilder().setId(content).build())
       log.debug("HeartBeat Down. Pong; Resp={}", pong.getRes())
-      registryService.markServerReady()
+      runtimeOperator.markServerReady()
     } catch (e: StatusRuntimeException) {
-      registryService.markServerNotReady()
+      runtimeOperator.markServerNotReady()
       log.debug("HeartBeat Down Failed. status={}", e.status.code)
     } catch (_: Exception) {
-      registryService.markServerNotReady()
+      runtimeOperator.markServerNotReady()
       log.debug("HeartBeat Down Failed !")
     }
   }

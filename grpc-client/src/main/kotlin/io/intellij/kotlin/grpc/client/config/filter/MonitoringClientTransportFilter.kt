@@ -3,17 +3,17 @@ package io.intellij.kotlin.grpc.client.config.filter
 import io.grpc.Attributes
 import io.grpc.ClientTransportFilter
 import io.grpc.Grpc
-import io.intellij.kotlin.grpc.client.context.RegistryService
+import io.intellij.kotlin.grpc.client.context.RuntimeOperator
 import io.intellij.kotlin.grpc.commons.config.getLogger
-import io.intellij.kotlin.grpc.context.Address
+import io.intellij.kotlin.grpc.context.NetworkAddr
 
 /**
  * MonitoringClientTransportFilter
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 class MonitoringClientTransportFilter(
-  private val registryService: RegistryService,
+  private val runtimeOperator: RuntimeOperator,
 ) : ClientTransportFilter() {
   companion object {
     private val log = getLogger(MonitoringClientTransportFilter::class.java)
@@ -27,27 +27,27 @@ class MonitoringClientTransportFilter(
       log.warn("transport ready without remote/local address: {}", transportAttrs)
       return super.transportReady(transportAttrs)
     }
-    val remote: Address = Address.from(remoteSocketAddress, false)
-    val local: Address = Address.from(localSocketAddress, true)
-    registryService.onConnect(remote, local)
+    val remote: NetworkAddr = NetworkAddr.from(remoteSocketAddress, false)
+    val local: NetworkAddr = NetworkAddr.from(localSocketAddress, true)
+    runtimeOperator.onConnect(remote, local)
     return super.transportReady(transportAttrs)
   }
 
   override fun transportTerminated(transportAttrs: Attributes?) {
     log.debug("transport terminated: {}", transportAttrs)
     if (transportAttrs == null) {
-      registryService.onDisconnect()
+      runtimeOperator.onDisconnect()
       return
     }
     val remoteSocketAddress = transportAttrs.get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR)
     val localSocketAddress = transportAttrs.get(Grpc.TRANSPORT_ATTR_LOCAL_ADDR)
     if (remoteSocketAddress == null || localSocketAddress == null) {
-      registryService.onDisconnect()
+      runtimeOperator.onDisconnect()
       return
     }
-    registryService.onDisconnect(
-      Address.from(remoteSocketAddress, false),
-      Address.from(localSocketAddress, true),
+    runtimeOperator.onDisconnect(
+      NetworkAddr.from(remoteSocketAddress, false),
+      NetworkAddr.from(localSocketAddress, true),
     )
   }
 

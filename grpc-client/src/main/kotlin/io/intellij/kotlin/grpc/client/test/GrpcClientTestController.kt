@@ -2,7 +2,7 @@ package io.intellij.kotlin.grpc.client.test
 
 import io.intellij.kotlin.grpc.client.config.anno.RequireGrpcServerReady
 import io.intellij.kotlin.grpc.client.context.GrpcApplicationContext
-import io.intellij.kotlin.grpc.client.context.ServerConn
+import io.intellij.kotlin.grpc.client.context.ServerConnState
 import io.intellij.kotlin.grpc.client.entities.GreetReq
 import io.intellij.kotlin.grpc.client.entities.GreetResp
 import io.intellij.kotlin.grpc.client.service.HeartBeatService
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 /**
  * GrpcClientTestController
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @RestController
 class GrpcClientTestController(
@@ -56,7 +56,7 @@ class GrpcClientTestController(
   }
 
   @GetMapping("/serverConn")
-  fun serverConn(): ServerConn {
+  fun serverConn(): ServerConnState {
     return grpcApplicationContext.serverConn()
   }
 

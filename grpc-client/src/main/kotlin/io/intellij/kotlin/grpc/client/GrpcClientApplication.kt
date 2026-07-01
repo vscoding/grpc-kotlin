@@ -6,7 +6,7 @@ import org.springframework.boot.runApplication
 /**
  * GrpcClientApplication
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @SpringBootApplication
 class GrpcClientApplication

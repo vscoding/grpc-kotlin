@@ -5,7 +5,7 @@ import io.intellij.kotlin.grpc.multi.GreetResponse
 /**
  * GrpcConvertUtils
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 object GrpcConvertUtils {
   fun convert(req: GreetResponse): GreetResp {

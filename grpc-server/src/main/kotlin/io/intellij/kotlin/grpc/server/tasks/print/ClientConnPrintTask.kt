@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 /**
  * ClientConnPrintTask
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @Service
 class ClientConnPrintTask(

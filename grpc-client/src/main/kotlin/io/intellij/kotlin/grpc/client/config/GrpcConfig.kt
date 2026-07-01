@@ -6,7 +6,7 @@ import io.grpc.ManagedChannelBuilder
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder
 import io.intellij.kotlin.grpc.client.config.filter.MonitoringClientTransportFilter
 import io.intellij.kotlin.grpc.client.config.interceptor.GrpcConnClientInterceptor
-import io.intellij.kotlin.grpc.client.context.RegistryService
+import io.intellij.kotlin.grpc.client.context.RuntimeOperator
 import net.devh.boot.grpc.client.channelfactory.GrpcChannelConfigurer
 import net.devh.boot.grpc.client.interceptor.GrpcGlobalClientInterceptor
 import org.springframework.context.annotation.Bean
@@ -15,13 +15,13 @@ import org.springframework.context.annotation.Configuration
 /**
  * GrpcConfig
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @Configuration
 class GrpcConfig {
   @Bean
-  fun monitoringClientTransportFilter(registryService: RegistryService): ClientTransportFilter {
-    return MonitoringClientTransportFilter(registryService)
+  fun monitoringClientTransportFilter(runtimeOperator: RuntimeOperator): ClientTransportFilter {
+    return MonitoringClientTransportFilter(runtimeOperator)
   }
 
   /**
@@ -44,8 +44,8 @@ class GrpcConfig {
   }
 
   @GrpcGlobalClientInterceptor
-  fun grpcConnectionClientInterceptor(registryService: RegistryService): ClientInterceptor {
-    return GrpcConnClientInterceptor(registryService)
+  fun grpcConnectionClientInterceptor(runtimeOperator: RuntimeOperator): ClientInterceptor {
+    return GrpcConnClientInterceptor(runtimeOperator)
   }
 
   companion object {

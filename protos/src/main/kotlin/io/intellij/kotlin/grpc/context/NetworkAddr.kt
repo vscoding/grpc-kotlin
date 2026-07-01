@@ -7,17 +7,17 @@ import java.util.Objects
 /**
  * Address
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
-data class Address(val host: String, val port: Int) {
+data class NetworkAddr(val host: String, val port: Int) {
 
   companion object {
     private const val UNKNOWN_HOST = "unknown"
     private const val UNKNOWN_PORT = -1
     const val LOCAL_HOST: String = "127.0.0.1"
 
-    val UNKNOWN_REMOTE: Address = Address(UNKNOWN_HOST, UNKNOWN_PORT)
-    val UNKNOWN_LOCAL: Address = Address(LOCAL_HOST, UNKNOWN_PORT)
+    val UNKNOWN_REMOTE: NetworkAddr = NetworkAddr(UNKNOWN_HOST, UNKNOWN_PORT)
+    val UNKNOWN_LOCAL: NetworkAddr = NetworkAddr(LOCAL_HOST, UNKNOWN_PORT)
 
     /**
      * Creates an Address object from a given SocketAddress.
@@ -26,15 +26,15 @@ data class Address(val host: String, val port: Int) {
      * @param local         Whether the SocketAddress is local or not.
      * @return The Address object created from the SocketAddress, or an unknown Address if the SocketAddress is null or not an instance of InetSocketAddress.
      */
-    fun from(socketAddress: SocketAddress, local: Boolean): Address {
+    fun from(socketAddress: SocketAddress, local: Boolean): NetworkAddr {
       return if (socketAddress is InetSocketAddress) {
-        Address(socketAddress.hostString, socketAddress.port)
+        NetworkAddr(socketAddress.hostString, socketAddress.port)
       } else {
         unknown(local)
       }
     }
 
-    private fun unknown(local: Boolean): Address {
+    private fun unknown(local: Boolean): NetworkAddr {
       // data class copy to prevent modification of the original object
       return if (local) UNKNOWN_LOCAL.copy() else UNKNOWN_REMOTE.copy()
     }
@@ -45,7 +45,7 @@ data class Address(val host: String, val port: Int) {
   }
 
   override fun equals(other: Any?): Boolean {
-    return if (other is Address) {
+    return if (other is NetworkAddr) {
       this.host == other.host && this.port == other.port
     } else {
       false

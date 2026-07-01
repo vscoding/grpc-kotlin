@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger
 /**
  * GrpcConnCounterInterceptor
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 class GrpcConnCounterInterceptor : ServerInterceptor {
 

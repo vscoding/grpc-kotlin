@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger
 /**
  * StreamService
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 interface StreamService {
 
@@ -30,6 +30,9 @@ interface StreamService {
   @kotlin.jvm.Throws(Exception::class)
   fun serverStream(data: String)
 
+  /**
+   * bidi stream: client to server, server to client
+   */
   @kotlin.jvm.Throws(Exception::class)
   fun bidiStream(count: Int)
 

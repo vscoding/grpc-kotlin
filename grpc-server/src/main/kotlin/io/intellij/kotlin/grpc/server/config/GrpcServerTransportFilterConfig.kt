@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration
 /**
  * GrpcServerTransportFilterConfig
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @Configuration
 class GrpcServerTransportFilterConfig {

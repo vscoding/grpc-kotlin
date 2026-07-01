@@ -7,11 +7,13 @@ import org.slf4j.LoggerFactory
  * Log
  *
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  * @since 2021/1/5
  */
 
 fun getLogger(forClass: Class<*>): Logger = LoggerFactory.getLogger(forClass)
+
+fun getLogger(name: String): Logger = LoggerFactory.getLogger(name)
 
 /*
 abstract class Log {

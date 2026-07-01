@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * BidiStreamService
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @GrpcService
 class BidiStreamService : BidiStreamServiceGrpc.BidiStreamServiceImplBase() {

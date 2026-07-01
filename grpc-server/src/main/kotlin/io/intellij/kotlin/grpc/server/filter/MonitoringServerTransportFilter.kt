@@ -4,14 +4,14 @@ import io.grpc.Attributes
 import io.grpc.Grpc
 import io.grpc.ServerTransportFilter
 import io.intellij.kotlin.grpc.commons.config.getLogger
-import io.intellij.kotlin.grpc.context.Address
+import io.intellij.kotlin.grpc.context.NetworkAddr
 import io.intellij.kotlin.grpc.server.context.RegistryService
 import java.net.InetSocketAddress
 
 /**
  * MonitoringServerTransportFilter
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 class MonitoringServerTransportFilter(
   val registryService: RegistryService,
@@ -29,7 +29,7 @@ class MonitoringServerTransportFilter(
       return super.transportReady(transportAttrs)
     }
     registryService.markUp(
-      Address.from(remoteSocketAddress, false),
+      NetworkAddr.from(remoteSocketAddress, false),
     )
     return super.transportReady(transportAttrs)
   }
@@ -42,7 +42,7 @@ class MonitoringServerTransportFilter(
       return
     }
     registryService.markDown(
-      Address.from(remoteSocketAddress, false),
+      NetworkAddr.from(remoteSocketAddress, false),
     )
     if (remoteSocketAddress is InetSocketAddress) {
       log.info("transport terminated: ip = {} ;port = {}", remoteSocketAddress.hostString, remoteSocketAddress.port)

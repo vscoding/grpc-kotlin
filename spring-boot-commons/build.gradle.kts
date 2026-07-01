@@ -24,5 +24,5 @@ repositories {
 dependencies {
   implementation(libs.spring.boot)
   implementation(libs.spring.boot.starter.logging)
-  implementation(kotlin("stdlib-jdk8"))
+  implementation(kotlin("stdlib-jdk8")) // 显式声明标准库依赖
 }

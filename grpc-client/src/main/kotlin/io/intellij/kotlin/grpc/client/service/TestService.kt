@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 /**
  * TestService
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 interface TestService {
 

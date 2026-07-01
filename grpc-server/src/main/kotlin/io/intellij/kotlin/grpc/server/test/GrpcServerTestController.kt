@@ -1,7 +1,7 @@
 package io.intellij.kotlin.grpc.server.test
 
 import io.intellij.kotlin.grpc.commons.config.getLogger
-import io.intellij.kotlin.grpc.server.context.ClientConn
+import io.intellij.kotlin.grpc.server.context.ClientConnState
 import io.intellij.kotlin.grpc.server.context.GrpcServerApplicationContext
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 /**
  * GrpcServerTestController
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @RestController
 @RequestMapping
@@ -42,12 +42,12 @@ class GrpcServerTestController(
   }
 
   @GetMapping("/liveClients")
-  fun liveClients(): List<ClientConn> {
+  fun liveClients(): List<ClientConnState> {
     return grpcServerApplicationContext.liveClients()
   }
 
   @GetMapping("/historyClients")
-  fun historyClients(): List<ClientConn> {
+  fun historyClients(): List<ClientConnState> {
     return grpcServerApplicationContext.historyClients()
   }
 

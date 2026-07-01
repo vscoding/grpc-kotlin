@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 /**
  * ClearHistoryTask
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 @Service
 class ClearHistoryTask(

@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * AbstractCronTask
  *
- * @author tech@intellij.io
+ * @author dev@intellij.io
  */
 abstract class AbstractCronTask : CronTask, InitializingBean, DisposableBean {
 
